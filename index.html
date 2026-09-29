@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="A step-by-step walkthrough of the SVSI task flow, with every screen linking back to its Figma frame.">
+<title>SVSI Flow Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --brand:#003DA5; --action:#005EFF;
+  --ink:#1B2432; --ink-2:#4E5A71; --ink-3:#7C8699;
+  --page:#F2F4F8; --card:#FFFFFF; --sunk:#F7F9FC;
+  --line:#DCE1EA; --line-2:#C2C9D6;
+  --ok:#1BB135; --warn:#E8A700; --stop:#D23B3B;
+  --supplier:#0E7C7B; --buyer:#005EFF; --lab:#7A4FBF; --team:#B4632A;
+  --bronze:#A2683A; --silver:#78889C; --gold:#B8912F;
+  --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans:'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --brand:#7FA8F0; --action:#6E9CFF;
+    --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7E889B;
+    --page:#12161D; --card:#1A1F28; --sunk:#151A22;
+    --line:#2A313D; --line-2:#3A4250;
+    --ok:#4BC963; --warn:#E5B647; --stop:#E56A6A;
+    --supplier:#4FBDBC; --buyer:#6E9CFF; --lab:#A98AE0; --team:#D69256;
+    --bronze:#C08B5C; --silver:#9FAEC2; --gold:#D6B457;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --brand:#7FA8F0; --action:#6E9CFF;
+  --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7E889B;
+  --page:#12161D; --card:#1A1F28; --sunk:#151A22;
+  --line:#2A313D; --line-2:#3A4250;
+  --ok:#4BC963; --warn:#E5B647; --stop:#E56A6A;
+  --supplier:#4FBDBC; --buyer:#6E9CFF; --lab:#A98AE0; --team:#D69256;
+  --bronze:#C08B5C; --silver:#9FAEC2; --gold:#D6B457;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--action)}
+h1,h2,h3{text-wrap:balance; margin:0}
+
+/* ---------- sticky progress bar : mirrors the product's own Task Steps ---------- */
+#railbar{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:40;
+  background:color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.railinner{max-width:1180px; margin:0 auto; padding:10px 16px 12px}
+.railtop{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:9px}
+.railtitle{font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.railnow{font-size:12px; color:var(--ink-3)}
+.railnow b{color:var(--ink); font-weight:500}
+.steps{display:flex; gap:4px; list-style:none; margin:0; padding:0}
+.steps li{flex:1 1 0; min-width:0}
+.steps a{
+  display:block; text-decoration:none; padding-top:7px;
+  border-top:4px solid var(--line-2); color:var(--ink-3);
+  font-size:11px; line-height:1.25; letter-spacing:.01em;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.steps a .n{font-family:var(--mono); font-size:10px; display:block; opacity:.75}
+.steps li.on a{border-top-color:var(--action); color:var(--ink); font-weight:500}
+.steps li.done a{border-top-color:var(--ok)}
+.steps a:focus-visible{outline:2px solid var(--action); outline-offset:3px; border-radius:2px}
+
+/* ---------- page ---------- */
+.wrap{max-width:1180px; margin:0 auto; padding-inline:16px; padding-block:0 72px}
+
+header.hero{padding-block:42px 30px; border-bottom:1px solid var(--line); margin-bottom:34px}
+.eyebrow{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--brand); margin-bottom:12px}
+h1{font-size:clamp(28px,4.4vw,42px); line-height:1.12; letter-spacing:-.02em; font-weight:700; max-width:19ch}
+.lede{margin-top:16px; max-width:64ch; color:var(--ink-2); font-size:16px}
+.herometa{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px}
+
+.chip{display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:2px;
+  font-size:11px; font-weight:500; letter-spacing:.02em; border:1px solid var(--line-2); color:var(--ink-2); background:var(--card)}
+.chip .dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+.chip.supplier{color:var(--supplier); border-color:color-mix(in srgb, var(--supplier) 42%, transparent)}
+.chip.buyer{color:var(--buyer); border-color:color-mix(in srgb, var(--buyer) 42%, transparent)}
+.chip.lab{color:var(--lab); border-color:color-mix(in srgb, var(--lab) 42%, transparent)}
+.chip.team{color:var(--team); border-color:color-mix(in srgb, var(--team) 42%, transparent)}
+
+/* ---------- step section ---------- */
+section.step{scroll-margin-top:118px; margin-bottom:40px}
+.stephead{display:flex; gap:16px; align-items:flex-start; margin-bottom:6px}
+.stepnum{font-family:var(--mono); font-size:13px; font-weight:600; color:var(--ink-3);
+  border:1px solid var(--line-2); border-radius:2px; padding:3px 8px; flex:none; margin-top:3px}
+.stephead h2{font-size:22px; letter-spacing:-.01em; font-weight:700}
+.actors{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.intro{margin:14px 0 20px; max-width:72ch; color:var(--ink-2)}
+.intro strong{color:var(--ink); font-weight:500}
+
+/* ---------- frame grid ---------- */
+.frames{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:16px}
+.frame{background:var(--card); border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  display:flex; flex-direction:column; transition:border-color .15s, transform .15s}
+.frame:hover{border-color:var(--line-2)}
+.shot{display:block; background:var(--sunk); border-bottom:1px solid var(--line); aspect-ratio:4/3; overflow:hidden}
+.shot img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block; max-width:100%}
+.frame .body{padding:12px 14px 13px; display:flex; flex-direction:column; gap:5px; flex:1}
+.frame h3{font-size:13.5px; font-weight:500; letter-spacing:-.005em; line-height:1.35}
+.frame p{margin:0; font-size:12.5px; color:var(--ink-3); line-height:1.5}
+.frame .go{margin-top:auto; padding-top:9px; display:flex; align-items:center; gap:6px;
+  font-family:var(--mono); font-size:11px; font-weight:500; color:var(--action); text-decoration:none}
+.frame .go:hover{text-decoration:underline}
+.frame .go .id{color:var(--ink-3); font-weight:400}
+.frame.linkonly .shot{aspect-ratio:auto; height:0; border:0}
+
+/* compact link list for secondary frames */
+.morelinks{margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:4px}
+.morelinks .mh{padding:10px 14px; border-bottom:1px solid var(--line); font-family:var(--mono);
+  font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.morelinks ul{list-style:none; margin:0; padding:0}
+.morelinks li{border-top:1px solid var(--line)}
+.morelinks li:first-child{border-top:0}
+.morelinks a{display:flex; gap:12px; align-items:baseline; padding:9px 14px; text-decoration:none; color:var(--ink)}
+.morelinks a:hover{background:var(--sunk)}
+.morelinks .nm{font-size:13px; flex:1; min-width:0}
+.morelinks .id{font-family:var(--mono); font-size:11px; color:var(--ink-3); flex:none}
+
+/* ---------- reference blocks ---------- */
+.panel{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:22px 24px; margin-bottom:18px}
+.panel h2{font-size:18px; margin-bottom:6px}
+.panel .sub{color:var(--ink-3); font-size:13px; margin-bottom:18px}
+.tablewrap{overflow-x:auto; margin:0 -24px; padding:0 24px}
+table{border-collapse:collapse; width:100%; font-size:13px; min-width:520px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3);
+  background:var(--sunk); border-bottom:1px solid var(--line-2)}
+td:first-child{white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+.tier{font-family:var(--mono); font-size:11px; font-weight:600; padding:2px 7px; border-radius:2px; border:1px solid currentColor}
+.tier.b{color:var(--bronze)} .tier.s{color:var(--silver)} .tier.g{color:var(--gold)}
+code{font-family:var(--mono); font-size:.88em; background:var(--sunk); border:1px solid var(--line);
+  border-radius:2px; padding:1px 5px; color:var(--ink-2)}
+
+.qlist{list-style:none; margin:0; padding:0; display:grid; gap:12px}
+.qlist li{border-left:3px solid var(--warn); padding:2px 0 2px 14px}
+.qlist b{display:block; font-weight:500; font-size:14px; margin-bottom:2px}
+.qlist span{color:var(--ink-2); font-size:13.5px}
+
+footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); color:var(--ink-3); font-size:12.5px}
+footer a{color:var(--action)}
+
+@media (max-width:640px){
+  .steps a{font-size:0; padding-top:6px}
+  .steps a .n{font-size:10px}
+  .frames{grid-template-columns:1fr}
+  .tablewrap{margin:0 -16px; padding:0 16px}
+  .panel{padding:18px 16px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important; scroll-behavior:auto !important}}
+html{scroll-behavior:smooth}
+</style>
+<style>
+/* standalone page reset — the artifact host normally supplies this */
+:root{padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+
+<nav id="railbar" aria-label="Flow steps">
+  <div class="railinner">
+    <div class="railtop">
+      <span class="railtitle">SVSI task flow</span>
+      <span class="railnow">You are reading &middot; <b id="nowstep">Before the task</b></span>
+    </div>
+    <ul class="steps" id="steps">
+      <li data-t="s0"><a href="#s0"><span class="n">00</span>Before the task</a></li>
+      <li data-t="s1"><a href="#s1"><span class="n">01</span>Application</a></li>
+      <li data-t="s2"><a href="#s2"><span class="n">02</span>Invoice</a></li>
+      <li data-t="s3"><a href="#s3"><span class="n">03</span>Lab Audit</a></li>
+      <li data-t="s4"><a href="#s4"><span class="n">04</span>QT Review</a></li>
+      <li data-t="s5"><a href="#s5"><span class="n">05</span>Ethical Check</a></li>
+      <li data-t="s6"><a href="#s6"><span class="n">06</span>SVSI Team Review</a></li>
+      <li data-t="s7"><a href="#s7"><span class="n">07</span>Approve &amp; Sign</a></li>
+      <li data-t="ref"><a href="#ref"><span class="n">&mdash;</span>Reference</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">WBA &middot; TBG &middot; ICW</div>
+  <h1>Supplier Voluntary Self-Inspection, step by step</h1>
+  <p class="lede">SVSI is moving from a Word-and-email process onto the ICW platform. One task covers
+  one factory, and it runs through seven steps and four roles before that factory is allowed to
+  inspect its own products. This page follows the designed screens in order &mdash; every card opens
+  the real frame in Figma, so you can jump in wherever the discussion goes and find your way back.</p>
+  <div class="herometa">
+    <span class="chip supplier"><span class="dot"></span>Supplier</span>
+    <span class="chip buyer"><span class="dot"></span>Buyer &middot; WBA QT</span>
+    <span class="chip lab"><span class="dot"></span>Lab &middot; UL / BV</span>
+    <span class="chip team"><span class="dot"></span>SVSI Team</span>
+  </div>
+</header>
+
+<!-- ============ 00 ============ -->
+<section class="step" id="s0">
+  <div class="stephead">
+    <span class="stepnum">00</span>
+    <div>
+      <h2>Before the task exists</h2>
+      <div class="actors"><span class="chip buyer"><span class="dot"></span>Buyer</span></div>
+    </div>
+  </div>
+  <p class="intro">SVSI applies to a <strong>factory</strong>, not a supplier. So the buyer starts from
+  the supplier list, expands a supplier to see the factories underneath it, and decides which of those
+  factories are in scope. Factories that will never join are marked
+  <strong>Out of Scope</strong>; the rest sit at <strong>Not Rated</strong> until they earn a tier.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=530-3455" target="_blank" rel="noopener"><img src="shots/s01_supplier_list.png" alt="Supplier list expanded to show the factories under one supplier"></a>
+      <div class="body">
+        <h3>Supplier list, expanded</h3>
+        <p>Supplier parent rows carry a counted tier chip &mdash; <code>GOLD(2)</code>, <code>NOT RATED(1)</code>. The factories sit underneath with their own tier and task status.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=530-3455" target="_blank" rel="noopener">Open in Figma <span class="id">530:3455</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=952-3937" target="_blank" rel="noopener"><img src="shots/s02_mark_svsi.png" alt="Selecting factories to mark as out of scope"></a>
+      <div class="body">
+        <h3>Mark in or out of scope</h3>
+        <p>Bulk-select factories and mark them. Marking as SVSI moves a factory to <code>NOT RATED</code>; the rest become <code>OUT OF SCOPE</code> and drop out of the programme.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=952-3937" target="_blank" rel="noopener">Open in Figma <span class="id">952:3937</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">Also in this area</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=6-2" target="_blank" rel="noopener"><span class="nm">Supplier list &mdash; collapsed (default view)</span><span class="id">6:2</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=821-17358" target="_blank" rel="noopener"><span class="nm">Factory list &mdash; SVSI white list, all factories</span><span class="id">821:17358</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=832-18557" target="_blank" rel="noopener"><span class="nm">Factory detail &mdash; overview</span><span class="id">832:18557</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" id="s1">
+  <div class="stephead">
+    <span class="stepnum">01</span>
+    <div>
+      <h2>Application</h2>
+      <div class="actors"><span class="chip supplier"><span class="dot"></span>Supplier applies</span><span class="chip buyer"><span class="dot"></span>Buyer checks</span></div>
+    </div>
+  </div>
+  <p class="intro">The supplier starts the application themselves &mdash; this is the part that used to be
+  the Word <em>Application Form v4</em>. They confirm the factory, run a self-assessment, pick the items
+  the factory wants to self-inspect, and give payer details. The buyer then reviews the whole submission
+  and either approves it, returns it for correction, or rejects it.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=140-166" target="_blank" rel="noopener"><img src="shots/s03_app_part1.png" alt="Application part 1, first year"></a>
+      <div class="body">
+        <h3>Part 1 &mdash; factory &amp; contact</h3>
+        <p>First-year applicants give the full factory record. Renewals carry most of it forward.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=140-166" target="_blank" rel="noopener">Open in Figma <span class="id">140:166</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=144-165" target="_blank" rel="noopener"><img src="shots/s04_self_assess.png" alt="Self-assessment, all criteria met"></a>
+      <div class="body">
+        <h3>Self-assessment</h3>
+        <p>The factory declares it meets the entry criteria. A "not met" answer blocks the application there rather than later.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=144-165" target="_blank" rel="noopener">Open in Figma <span class="id">144:165</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=146-162" target="_blank" rel="noopener"><img src="shots/s05_item_list.png" alt="Item list with repeat and new items separated"></a>
+      <div class="body">
+        <h3>Item list</h3>
+        <p><strong>Repeat</strong> and <strong>New</strong> items are two separate lists. Per row: first shipped date, inspection history, and who inspects &mdash; self-inspection or a third-party lab.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=146-162" target="_blank" rel="noopener">Open in Figma <span class="id">146:162</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=147-162" target="_blank" rel="noopener"><img src="shots/s06_payer.png" alt="Payer information form"></a>
+      <div class="body">
+        <h3>Payer information</h3>
+        <p>Replaces the <em>Payer Information Form</em> doc. ICW bills the supplier on TBGASL's behalf, so this has to be right before the invoice is raised.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=147-162" target="_blank" rel="noopener">Open in Figma <span class="id">147:162</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=149-162" target="_blank" rel="noopener"><img src="shots/s07_buyer_check.png" alt="Buyer check form review screen"></a>
+      <div class="body">
+        <h3>Buyer check form</h3>
+        <p>The buyer reads the whole submission on one page and decides. This is where the audit lab is chosen, before the invoice.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=149-162" target="_blank" rel="noopener">Open in Figma <span class="id">149:162</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">States and variants</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=145-162" target="_blank" rel="noopener"><span class="nm">Item list &mdash; nothing selected yet (Continue disabled)</span><span class="id">145:162</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1564-4908" target="_blank" rel="noopener"><span class="nm">Ship date &mdash; select an existing date or add a new one</span><span class="id">1564:4908</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1565-4969" target="_blank" rel="noopener"><span class="nm">Inspection party &mdash; self-inspection or 3rd party lab</span><span class="id">1565:4969</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=144-336" target="_blank" rel="noopener"><span class="nm">Self-assessment &mdash; criteria not met</span><span class="id">144:336</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=147-300" target="_blank" rel="noopener"><span class="nm">Application submitted</span><span class="id">147:300</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1043-21409" target="_blank" rel="noopener"><span class="nm">Returned to the supplier for correction</span><span class="id">1043:21409</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1043-21574" target="_blank" rel="noopener"><span class="nm">Rejected by the SVSI team</span><span class="id">1043:21574</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" id="s2">
+  <div class="stephead">
+    <span class="stepnum">02</span>
+    <div>
+      <h2>Invoice</h2>
+      <div class="actors"><span class="chip buyer"><span class="dot"></span>Buyer raises</span><span class="chip supplier"><span class="dot"></span>Supplier pays</span></div>
+    </div>
+  </div>
+  <p class="intro">The fee depends on the tier being applied for &mdash; the invoice reads
+  <strong>Bronze &middot; USD 950 / factory</strong> &mdash; so <code>Scheme / Fee</code> is known from
+  this step onward, well before any tier is actually awarded. Payment must clear before the assessment
+  starts; the programme letter is explicit that fees are non-refundable even if the application is later refused.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1189-30008" target="_blank" rel="noopener"><img src="shots/s08_invoice.png" alt="Buyer invoice screen, pending payment"></a>
+      <div class="body">
+        <h3>Invoice &mdash; pending payment</h3>
+        <p>Task Basic information on top, invoice details and the priced inspection plan below. One factory, one line.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1189-30008" target="_blank" rel="noopener">Open in Figma <span class="id">1189:30008</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">Also in this step</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=403-3910" target="_blank" rel="noopener"><span class="nm">Supplier side &mdash; invoice paid</span><span class="id">403:3910</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1339-5441" target="_blank" rel="noopener"><span class="nm">Booking reserved &mdash; audit date set, no result yet</span><span class="id">1339:5441</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1177-28333" target="_blank" rel="noopener"><span class="nm">Returned to previous stage</span><span class="id">1177:28333</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1651-20809" target="_blank" rel="noopener"><span class="nm">Task cancelled</span><span class="id">1651:20809</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" id="s3">
+  <div class="stephead">
+    <span class="stepnum">03</span>
+    <div>
+      <h2>Lab Audit</h2>
+      <div class="actors"><span class="chip lab"><span class="dot"></span>Lab &middot; UL / BV</span></div>
+    </div>
+  </div>
+  <p class="intro">The lab has its own view with its own lifecycle &mdash;
+  <em>Received &rarr; Audit Scheduled &rarr; Audit Completed &rarr; Report Uploaded &rarr; Agreement &amp; Addendum Sign</em>.
+  They confirm the audit date, run the on-site factory assessment, then upload the report and the result.
+  <strong>Findings are optional</strong>: Major NC, Minor NC and Observation / OFI entries are added only
+  if there are any. Several reports may be uploaded, but there is one findings table and one result.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1043-21837" target="_blank" rel="noopener"><img src="shots/s09_lab_detail.png" alt="Lab submission detail for a factory audit task"></a>
+      <div class="body">
+        <h3>Submission detail</h3>
+        <p>The lab's working screen for one factory audit task, with the buyer deadline visible.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1043-21837" target="_blank" rel="noopener">Open in Figma <span class="id">1043:21837</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1390-4580" target="_blank" rel="noopener"><img src="shots/s10_lab_upload.png" alt="Lab upload result and report, empty state"></a>
+      <div class="body">
+        <h3>Upload result &amp; report</h3>
+        <p>Empty state first &mdash; the update button stays disabled until a result is chosen. Audit data is entered once, not re-keyed per report.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1390-4580" target="_blank" rel="noopener">Open in Figma <span class="id">1390:4580</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">The rest of the lab flow</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=291-3947" target="_blank" rel="noopener"><span class="nm">Lab home dashboard</span><span class="id">291:3947</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=291-2582" target="_blank" rel="noopener"><span class="nm">Lab submission table</span><span class="id">291:2582</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=376-3134" target="_blank" rel="noopener"><span class="nm">Confirm audit date</span><span class="id">376:3134</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=376-3970" target="_blank" rel="noopener"><span class="nm">Uploaded &mdash; result, findings, attachments</span><span class="id">376:3970</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=376-4611" target="_blank" rel="noopener"><span class="nm">Complete &mdash; confirm</span><span class="id">376:4611</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1591-16087" target="_blank" rel="noopener"><span class="nm">Lab sees a rejected report</span><span class="id">1591:16087</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" id="s4">
+  <div class="stephead">
+    <span class="stepnum">04</span>
+    <div>
+      <h2>QT Review</h2>
+      <div class="actors"><span class="chip buyer"><span class="dot"></span>Buyer &middot; WBA QT</span></div>
+    </div>
+  </div>
+  <p class="intro">QT reads the lab's report and result and takes one of three routes: <strong>confirm</strong>
+  and move on, <strong>request a revised report</strong> from the lab, or <strong>reject</strong> it.
+  Only once the result is confirmed does the task carry an Audit Result, an Audit Report Completed Date,
+  and a findings summary.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1405-9212" target="_blank" rel="noopener"><img src="shots/s11_qt_review.png" alt="Buyer reviewing the uploaded report and result"></a>
+      <div class="body">
+        <h3>Report &amp; result</h3>
+        <p>Result, findings breakdown and the lab's documents on one page, under the task's own Basic information.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1405-9212" target="_blank" rel="noopener">Open in Figma <span class="id">1405:9212</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">The three decisions</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1043-23844" target="_blank" rel="noopener"><span class="nm">Confirm result</span><span class="id">1043:23844</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1448-9588" target="_blank" rel="noopener"><span class="nm">Request revised report</span><span class="id">1448:9588</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1448-9626" target="_blank" rel="noopener"><span class="nm">Reject report</span><span class="id">1448:9626</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" id="s5">
+  <div class="stephead">
+    <span class="stepnum">05</span>
+    <div>
+      <h2>Ethical Check</h2>
+      <div class="actors"><span class="chip buyer"><span class="dot"></span>Buyer sends</span></div>
+    </div>
+  </div>
+  <p class="intro">A separate annual product performance review, run alongside the factory audit rather than
+  inside it. Phase 1 is an uploaded SVSI evaluation spreadsheet judged on 1506 for 52 weeks, VOC, star
+  rating and the past year's inspection history. Phase 2 is meant to replace that upload with figures
+  pulled from ICW for the buyer to verify.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=380-2877" target="_blank" rel="noopener"><img src="shots/s12_ethical.png" alt="Send to ethical review dialog"></a>
+      <div class="body">
+        <h3>Send to ethical review</h3>
+        <p>Criteria and items in scope are stated up front so the reviewer knows what they are judging.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=380-2877" target="_blank" rel="noopener">Open in Figma <span class="id">380:2877</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">After the check</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1455-11275" target="_blank" rel="noopener"><span class="nm">Ethical check complete</span><span class="id">1455:11275</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-18989" target="_blank" rel="noopener"><span class="nm">Passed on to the SVSI team</span><span class="id">1603:18989</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" id="s6">
+  <div class="stephead">
+    <span class="stepnum">06</span>
+    <div>
+      <h2>SVSI Team Review</h2>
+      <div class="actors"><span class="chip team"><span class="dot"></span>SVSI Team</span></div>
+    </div>
+  </div>
+  <p class="intro">The final gate before documents are issued. TBGASL has sole discretion over whether a
+  supplier joins the programme &mdash; accepting payment is not acceptance into SVSI. This is also the
+  step that decides which tier the factory is awarded.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-19212" target="_blank" rel="noopener"><img src="shots/s13_svsi_review.png" alt="SVSI team review screen"></a>
+      <div class="body">
+        <h3>Team review</h3>
+        <p>Everything the earlier steps produced, in one place, with approve and reject as the only exits.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-19212" target="_blank" rel="noopener">Open in Figma <span class="id">1603:19212</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">Decisions</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-19480" target="_blank" rel="noopener"><span class="nm">Approve</span><span class="id">1603:19480</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-19556" target="_blank" rel="noopener"><span class="nm">Reject</span><span class="id">1603:19556</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="step" id="s7">
+  <div class="stephead">
+    <span class="stepnum">07</span>
+    <div>
+      <h2>Approve &amp; Sign</h2>
+      <div class="actors"><span class="chip buyer"><span class="dot"></span>Buyer generates</span><span class="chip supplier"><span class="dot"></span>Supplier signs</span><span class="chip team"><span class="dot"></span>SVSI Team completes</span></div>
+    </div>
+  </div>
+  <p class="intro">Two documents come out of ICW. The <strong>Agreement</strong> is supplier-level and
+  first-year only. The <strong>Addendum</strong> is factory-level and renewed every year &mdash; it is the
+  list of exactly which products that factory may self-inspect. The supplier signs offline, the scans come
+  back into ICW, and the SVSI team clicks <strong>Complete task</strong>. That click is what stamps the
+  self-inspection validity dates and awards the tier.</p>
+  <div class="frames">
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1763-5717" target="_blank" rel="noopener"><img src="shots/s14_gen_addendum.png" alt="Generate addendum dialog with product picker"></a>
+      <div class="body">
+        <h3>Generate Addendum</h3>
+        <p>Every yellow field from the Word template, in one form. Products are picked here; the upload-document column is derived, not typed.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1763-5717" target="_blank" rel="noopener">Open in Figma <span class="id">1763:5717</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1654-21831" target="_blank" rel="noopener"><img src="shots/s15_complete_task.png" alt="Complete task confirmation dialog"></a>
+      <div class="body">
+        <h3>Complete task</h3>
+        <p>A confirmation, not a form. It shows the tier and the validity window about to be written, because neither can be changed afterwards.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1654-21831" target="_blank" rel="noopener">Open in Figma <span class="id">1654:21831</span></a>
+      </div>
+    </div>
+    <div class="frame">
+      <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1656-22657" target="_blank" rel="noopener"><img src="shots/s16_completed.png" alt="Completed task with the scheme awarded"></a>
+      <div class="body">
+        <h3>Completed</h3>
+        <p>Seven steps green. The factory's Current scheme flips to Bronze and the validity dates appear on the factory record.</p>
+        <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1656-22657" target="_blank" rel="noopener">Open in Figma <span class="id">1656:22657</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="morelinks">
+    <div class="mh">The signing route</div>
+    <ul>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=610-23955" target="_blank" rel="noopener"><span class="nm">Generate Agreement</span><span class="id">610:23955</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=576-22372" target="_blank" rel="noopener"><span class="nm">Agreement &amp; Addendum &mdash; documents to send</span><span class="id">576:22372</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=380-3637" target="_blank" rel="noopener"><span class="nm">Upload the signed scans</span><span class="id">380:3637</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-18279" target="_blank" rel="noopener"><span class="nm">Supplier sees the task completed</span><span class="id">1603:18279</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1603-18455" target="_blank" rel="noopener"><span class="nm">Factory now on the white list</span><span class="id">1603:18455</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ reference ============ -->
+<section class="step" id="ref">
+  <div class="stephead">
+    <span class="stepnum">&mdash;</span>
+    <div><h2>Reference</h2></div>
+  </div>
+
+  <div class="panel">
+    <h2>The scheme ladder is a factory ladder</h2>
+    <p class="sub">Products never carry a tier. They carry only New or Repeat.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Tier</th><th>How a factory gets there</th><th>UL assessment</th><th>New item uploads</th><th>Repeat item uploads</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tier b">BRONZE</span></td><td>First year in the programme</td><td>Required</td><td>Report + Addendum</td><td>&mdash;</td></tr>
+          <tr><td><span class="tier s">SILVER</span></td><td>One good year at Bronze</td><td>Required</td><td>Report + Addendum</td><td>Report + Addendum</td></tr>
+          <tr><td><span class="tier g">GOLD</span></td><td>One good year at Silver</td><td>Not required</td><td>Report + Addendum</td><td><strong>Addendum only</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin:16px 0 0">So a Silver factory with a Repeat product still goes through the full lab flow.
+    Repeat only lightens the document burden, and only at Gold does it drop the self-inspection report.
+    An item graduates to Repeat by staying in the Addendum; drop it for a year and it comes back as New.</p>
+  </div>
+
+  <div class="panel">
+    <h2>What the two documents actually ask for</h2>
+    <p class="sub">Read from the Word originals, not the scans &mdash; the highlighted placeholders are real content controls.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Document</th><th>Level</th><th>Fields</th><th>Notable</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Agreement v6</td><td>Supplier<br><span style="color:var(--ink-3)">first year only</span></td>
+            <td>13 controls</td>
+            <td>The effective date is four dropdowns (day / month / two year digits) and is repeated as a date picker in clause 13. The MSTA date in the recitals is a field too.</td>
+          </tr>
+          <tr>
+            <td>Addendum v3.1</td><td>Factory<br><span style="color:var(--ink-3)">renewed annually</span></td>
+            <td>169 controls</td>
+            <td>Carries <strong>four</strong> product tables: Everyday / GNFR at item level with WIC number, Seasonal at category level with no WIC, and a separate Gold-repeat table for each. Only one dropdown in the whole document &mdash; the awarded scheme.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Open questions for the team</h2>
+    <p class="sub">Things the design cannot settle on its own.</p>
+    <ul class="qlist">
+      <li><b>Seasonal items are picked per WIC but written per category.</b>
+        <span>Step 3 selects Seasonal items individually; the Addendum lists Seasonal only as a Product Category. Is that roll-up automatic, or does the buyer choose the categories again when generating?</span></li>
+      <li><b>A factory that changes every item every year still climbs to Gold.</b>
+        <span>It would skip the audit while never holding a Repeat item long enough to earn the lighter upload rule. The deck does not cover this case.</span></li>
+      <li><b>Validity starts from the Addendum Effective Date, not the completion date.</b>
+        <span>In the signed Greatstar example both fall on the same day. If they can differ, which one drives the validity window?</span></li>
+      <li><b>Lab wording is still UL-specific in places.</b>
+        <span>"UL Audit", "UL &mdash; On-site Factory Assessment", "Factory previous UL assessment date". BV can now be selected, so these need neutral wording or a rule.</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>Screens are from the SVSI design file and reflect the board as of this build &mdash; every card links
+  back to its frame. <a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=0-1" target="_blank" rel="noopener">Open the full Figma board</a>.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section.step'));
+  var items = {};
+  Array.prototype.forEach.call(document.querySelectorAll('#steps li'), function(li){
+    items[li.getAttribute('data-t')] = li;
+  });
+  var label = document.getElementById('nowstep');
+  var order = secs.map(function(s){ return s.id; });
+
+  function mark(id){
+    var idx = order.indexOf(id);
+    order.forEach(function(k, i){
+      var li = items[k]; if(!li) return;
+      li.classList.toggle('on', i === idx);
+      li.classList.toggle('done', i < idx);
+    });
+    var li = items[id];
+    if(li && label){
+      var a = li.querySelector('a');
+      label.textContent = a ? a.textContent.replace(/^\d+|^—/, '').trim() : id;
+    }
+  }
+
+  if('IntersectionObserver' in window){
+    var seen = {};
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestV = -1;
+      order.forEach(function(k){ var v = seen[k] || 0; if(v > bestV){ bestV = v; best = k; } });
+      if(best && bestV > 0) mark(best);
+    }, { rootMargin: '-130px 0px -55% 0px', threshold: [0, 0.01, 0.2, 0.5, 1] });
+    secs.forEach(function(s){ io.observe(s); });
+  }
+  mark('s0');
+})();
+</script>
+</body>
+</html>
