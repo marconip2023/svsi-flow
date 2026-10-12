@@ -54,7 +54,7 @@ a:focus-visible{outline:2px solid var(--action); outline-offset:3px; border-radi
 
 #railbar{position:sticky; top:env(safe-area-inset-top, 0px); z-index:40;
   background:color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line)}
-.railinner{max-width:1600px; margin:0 auto; padding:10px 16px 12px}
+.railinner{max-width:1680px; margin:0 auto; padding:10px 16px 12px}
 .railtop{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:9px}
 .railtitle{font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
 .railnow{font-size:12px; color:var(--ink-3)}
@@ -69,7 +69,7 @@ a:focus-visible{outline:2px solid var(--action); outline-offset:3px; border-radi
 .steps li.on a{border-top-color:var(--action); color:var(--ink); font-weight:500}
 .steps li.done a{border-top-color:var(--ok)}
 
-.wrap{max-width:1600px; margin:0 auto; padding-inline:16px; padding-block:0 72px}
+.wrap{max-width:1680px; margin:0 auto; padding-inline:16px; padding-block:0 72px}
 header.hero{padding-block:42px 30px; border-bottom:1px solid var(--line); margin-bottom:34px}
 .eyebrow{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--brand); margin-bottom:12px}
 h1{font-size:clamp(28px,4.4vw,44px); line-height:1.12; letter-spacing:-.02em; font-weight:700; max-width:22ch}
@@ -113,8 +113,8 @@ section.step{scroll-margin-top:118px; margin-bottom:56px}
 .intro{margin:14px 0 18px; max-width:76ch; color:var(--ink-2); font-size:16px}
 .intro strong{color:var(--ink); font-weight:500}
 
-/* screen cards: 50% larger than v1 so a shared screen reads at a glance */
-.frames{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,390px),1fr)); gap:20px}
+/* screen cards: about 2x the v1 size so a shared screen reads at a glance */
+.frames{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,527px),1fr)); gap:20px}
 .frame{background:var(--card); border:1px solid var(--line); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; min-width:0}
 .frame:hover{border-color:var(--line-2)}
 .shot{display:block; background:var(--sunk); border-bottom:1px solid var(--line); aspect-ratio:4/3; overflow:hidden; max-width:100%}
