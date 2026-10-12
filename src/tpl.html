@@ -1,0 +1,291 @@
+<title>SVSI Flow Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one long presentable page, a sticky step rail mirroring the product's Task Steps, large screen cards per step */
+:root{
+  color-scheme: light;
+  --brand:#003DA5; --action:#005EFF;
+  --ink:#1B2432; --ink-2:#4E5A71; --ink-3:#7C8699;
+  --page:#F2F4F8; --card:#FFFFFF; --sunk:#F7F9FC;
+  --line:#DCE1EA; --line-2:#C2C9D6;
+  --ok:#1BB135; --warn:#E8A700; --stop:#D23B3B;
+  --supplier:#0E7C7B; --buyer:#005EFF; --lab:#7A4FBF; --team:#B4632A;
+  --bronze:#A2683A; --silver:#78889C; --gold:#B8912F;
+  --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans:'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --brand:#7FA8F0; --action:#6E9CFF;
+    --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7E889B;
+    --page:#12161D; --card:#1A1F28; --sunk:#151A22;
+    --line:#2A313D; --line-2:#3A4250;
+    --ok:#4BC963; --warn:#E5B647; --stop:#E56A6A;
+    --supplier:#4FBDBC; --buyer:#6E9CFF; --lab:#A98AE0; --team:#D69256;
+    --bronze:#C08B5C; --silver:#9FAEC2; --gold:#D6B457;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --brand:#7FA8F0; --action:#6E9CFF;
+  --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7E889B;
+  --page:#12161D; --card:#1A1F28; --sunk:#151A22;
+  --line:#2A313D; --line-2:#3A4250;
+  --ok:#4BC963; --warn:#E5B647; --stop:#E56A6A;
+  --supplier:#4FBDBC; --buyer:#6E9CFF; --lab:#A98AE0; --team:#D69256;
+  --bronze:#C08B5C; --silver:#9FAEC2; --gold:#D6B457;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--page); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased}
+a{color:var(--action)}
+h1,h2,h3{text-wrap:balance; margin:0}
+a:focus-visible{outline:2px solid var(--action); outline-offset:3px; border-radius:2px}
+
+#railbar{position:sticky; top:env(safe-area-inset-top, 0px); z-index:40;
+  background:color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line)}
+.railinner{max-width:1600px; margin:0 auto; padding:10px 16px 12px}
+.railtop{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:9px}
+.railtitle{font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.railnow{font-size:12px; color:var(--ink-3)}
+.railnow b{color:var(--ink); font-weight:500}
+.keys{margin-left:auto; font-size:11px; color:var(--ink-3); display:flex; gap:5px; align-items:center}
+.keys kbd{font-family:var(--mono); font-size:10px; border:1px solid var(--line-2); border-radius:2px; padding:0 5px; background:var(--card); color:var(--ink-2)}
+.steps{display:flex; gap:4px; list-style:none; margin:0; padding:0}
+.steps li{flex:1 1 0; min-width:0}
+.steps a{display:block; text-decoration:none; padding-top:7px; border-top:4px solid var(--line-2); color:var(--ink-3);
+  font-size:11px; line-height:1.25; letter-spacing:.01em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.steps a .n{font-family:var(--mono); font-size:10px; display:block; opacity:.75}
+.steps li.on a{border-top-color:var(--action); color:var(--ink); font-weight:500}
+.steps li.done a{border-top-color:var(--ok)}
+
+.wrap{max-width:1600px; margin:0 auto; padding-inline:16px; padding-block:0 72px}
+header.hero{padding-block:42px 30px; border-bottom:1px solid var(--line); margin-bottom:34px}
+.eyebrow{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--brand); margin-bottom:12px}
+h1{font-size:clamp(28px,4.4vw,44px); line-height:1.12; letter-spacing:-.02em; font-weight:700; max-width:22ch}
+.lede{margin-top:16px; max-width:70ch; color:var(--ink-2); font-size:16px}
+.herometa{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px}
+
+.chip{display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:2px; font-size:11px; font-weight:500; letter-spacing:.02em; border:1px solid var(--line-2); color:var(--ink-2); background:var(--card)}
+.chip .dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+.chip.supplier,.play.supplier{--role:var(--supplier)}
+.chip.buyer,.play.buyer{--role:var(--buyer)}
+.chip.lab,.play.lab{--role:var(--lab)}
+.chip.team,.play.team{--role:var(--team)}
+.chip.supplier,.chip.buyer,.chip.lab,.chip.team{color:var(--role); border-color:color-mix(in srgb, var(--role) 42%, transparent)}
+
+/* prototype launchers */
+.play{display:inline-flex; align-items:center; gap:8px; padding:7px 12px 7px 10px; border:1px solid color-mix(in srgb, var(--role) 45%, transparent);
+  border-radius:2px; background:var(--card); color:var(--ink); text-decoration:none; font-size:13px; line-height:1.3; min-width:0}
+.play:hover{background:color-mix(in srgb, var(--role) 8%, var(--card))}
+.play .tri{width:0; height:0; border-left:8px solid var(--role); border-top:5px solid transparent; border-bottom:5px solid transparent; flex:none}
+.play .pk{font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--role); white-space:nowrap}
+.plays{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 20px}
+.plays .pl{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-right:4px}
+.e2e{display:flex; gap:16px; align-items:flex-start; padding:20px 22px; background:var(--card); border:1px solid color-mix(in srgb, var(--action) 45%, transparent); border-left:4px solid var(--action); border-radius:4px; text-decoration:none; color:var(--ink); margin-top:4px}
+.e2e:hover{background:color-mix(in srgb, var(--action) 6%, var(--card))}
+.e2e .tri{width:0; height:0; border-left:16px solid var(--action); border-top:10px solid transparent; border-bottom:10px solid transparent; flex:none; margin-top:4px}
+.e2e .et{display:flex; flex-direction:column; gap:4px; min-width:0}
+.e2e b{font-size:19px; font-weight:700; letter-spacing:-.01em}
+.e2e .et span{color:var(--ink-2); font-size:14px}
+.protoidx{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:18px}
+.pgroup{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:16px; min-width:0}
+.pgh{display:flex; align-items:center; gap:10px; margin-bottom:12px}
+.pgh .cnt{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.plist{display:flex; flex-direction:column; gap:6px}
+.plist .play{display:flex}
+
+section.step{scroll-margin-top:118px; margin-bottom:56px}
+.stephead{display:flex; gap:16px; align-items:flex-start; margin-bottom:6px}
+.stepnum{font-family:var(--mono); font-size:13px; font-weight:600; color:var(--ink-3); border:1px solid var(--line-2); border-radius:2px; padding:3px 8px; flex:none; margin-top:4px}
+.stephead h2{font-size:26px; letter-spacing:-.01em; font-weight:700}
+.actors{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.intro{margin:14px 0 18px; max-width:76ch; color:var(--ink-2); font-size:16px}
+.intro strong{color:var(--ink); font-weight:500}
+
+/* screen cards: 50% larger than v1 so a shared screen reads at a glance */
+.frames{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,390px),1fr)); gap:20px}
+.frame{background:var(--card); border:1px solid var(--line); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; min-width:0}
+.frame:hover{border-color:var(--line-2)}
+.shot{display:block; background:var(--sunk); border-bottom:1px solid var(--line); aspect-ratio:4/3; overflow:hidden; max-width:100%}
+.shot img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+.frame .body{padding:14px 16px 15px; display:flex; flex-direction:column; gap:6px; flex:1}
+.frame h3{font-size:16px; font-weight:500; line-height:1.35}
+.frame p{margin:0; font-size:14px; color:var(--ink-3); line-height:1.55}
+.frame .go{margin-top:auto; padding-top:10px; display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; font-weight:500; color:var(--action); text-decoration:none}
+.frame .go:hover{text-decoration:underline}
+.frame .go .id{color:var(--ink-3); font-weight:400}
+
+.morelinks{margin-top:16px; background:var(--card); border:1px solid var(--line); border-radius:4px}
+.morelinks .mh{padding:10px 14px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.morelinks ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr))}
+.morelinks li{border-top:1px solid var(--line)}
+.morelinks a{display:flex; gap:12px; align-items:baseline; padding:9px 14px; text-decoration:none; color:var(--ink)}
+.morelinks a:hover{background:var(--sunk)}
+.morelinks .nm{font-size:13.5px; flex:1; min-width:0}
+.morelinks .id{font-family:var(--mono); font-size:11px; color:var(--ink-3); flex:none}
+
+.panel{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:22px 24px; margin-bottom:18px}
+.panel h2{font-size:18px; margin-bottom:6px}
+.panel .sub{color:var(--ink-3); font-size:13px; margin:0 0 18px}
+.tablewrap{overflow-x:auto; margin:0 -24px; padding:0 24px}
+table{border-collapse:collapse; width:100%; font-size:13.5px; min-width:520px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); background:var(--sunk); border-bottom:1px solid var(--line-2)}
+td:first-child{white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+.tier{font-family:var(--mono); font-size:11px; font-weight:600; padding:2px 7px; border-radius:2px; border:1px solid currentColor}
+.tier.b{color:var(--bronze)} .tier.s{color:var(--silver)} .tier.g{color:var(--gold)}
+code{font-family:var(--mono); font-size:.88em; background:var(--sunk); border:1px solid var(--line); border-radius:2px; padding:1px 5px; color:var(--ink-2)}
+.qlist{list-style:none; margin:0; padding:0; display:grid; gap:12px}
+.qlist li{border-left:3px solid var(--warn); padding:2px 0 2px 14px}
+.qlist b{display:block; font-weight:500; font-size:14px; margin-bottom:2px}
+.qlist span{color:var(--ink-2); font-size:13.5px}
+footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); color:var(--ink-3); font-size:12.5px}
+
+@media (max-width:640px){
+  .steps a{font-size:0; padding-top:6px}
+  .steps a .n{font-size:10px}
+  .keys{display:none}
+  .tablewrap{margin:0 -16px; padding:0 16px}
+  .panel{padding:18px 16px}
+  .play{white-space:normal}
+}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<nav id="railbar" aria-label="Flow steps">
+  <div class="railinner">
+    <div class="railtop">
+      <span class="railtitle">SVSI task flow</span>
+      <span class="railnow">You are reading &middot; <b id="nowstep">Prototype</b></span>
+      <span class="keys"><kbd>&larr;</kbd><kbd>&rarr;</kbd> previous / next step</span>
+    </div>
+    <ul class="steps" id="steps">
+      <li data-t="proto"><a href="#proto"><span class="n">&#9654;</span>Prototype</a></li>
+      <li data-t="s0"><a href="#s0"><span class="n">00</span>Before the task</a></li>
+      <li data-t="s1"><a href="#s1"><span class="n">01</span>Application</a></li>
+      <li data-t="s2"><a href="#s2"><span class="n">02</span>Invoice</a></li>
+      <li data-t="s3"><a href="#s3"><span class="n">03</span>Lab Audit</a></li>
+      <li data-t="s4"><a href="#s4"><span class="n">04</span>QT Review</a></li>
+      <li data-t="s5"><a href="#s5"><span class="n">05</span>Ethical Check</a></li>
+      <li data-t="s6"><a href="#s6"><span class="n">06</span>SVSI Team Review</a></li>
+      <li data-t="s7"><a href="#s7"><span class="n">07</span>Approve &amp; Sign</a></li>
+      <li data-t="ref"><a href="#ref"><span class="n">&mdash;</span>Reference</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">WBA &middot; TBG &middot; ICW</div>
+  <h1>Supplier Voluntary Self-Inspection, step by step</h1>
+  <p class="lede">SVSI is moving from a Word-and-email process onto the ICW platform. One task covers one factory, and it runs through seven steps and four roles before that factory is allowed to inspect its own products. This page follows the designed screens in order. Every screen opens the real frame in Figma, and every <b>&#9654;</b> button plays that part of the flow as a clickable Figma prototype.</p>
+  <div class="herometa">
+    <span class="chip supplier"><span class="dot"></span>Supplier</span>
+    <span class="chip buyer"><span class="dot"></span>Buyer &middot; WBA QT</span>
+    <span class="chip lab"><span class="dot"></span>Lab &middot; UL / BV</span>
+    <span class="chip team"><span class="dot"></span>SVSI Team &middot; Ethical</span>
+  </div>
+</header>
+
+<section class="step" id="proto">
+  <div class="stephead">
+    <span class="stepnum">&#9654;</span>
+    <div><h2>Clickable prototype, by role</h2></div>
+  </div>
+  <p class="intro">Start with the end-to-end path to see one factory go all the way through. Every screen carries a Lab / Buyer / Supplier switch in the top bar: it shows whose screen you are on, and clicking a role takes you to that role's home page if you get lost. The shorter flows below cover each role's alternatives, such as return, reject and revise. Dialogs open over the page; Cancel closes them.</p>
+%%E2E%%
+  <div class="protoidx">
+%%PROTO%%
+  </div>
+</section>
+
+%%STEPS%%
+
+<section class="step" id="ref">
+  <div class="stephead"><span class="stepnum">&mdash;</span><div><h2>Reference</h2></div></div>
+  <div class="panel">
+    <h2>The scheme ladder is a factory ladder</h2>
+    <p class="sub">Products never carry a tier. They carry only New or Repeat.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Tier</th><th>How a factory gets there</th><th>UL assessment</th><th>New item uploads</th><th>Repeat item uploads</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tier b">BRONZE</span></td><td>First year in the programme</td><td>Required</td><td>Report + Addendum</td><td>&mdash;</td></tr>
+          <tr><td><span class="tier s">SILVER</span></td><td>One good year at Bronze</td><td>Required</td><td>Report + Addendum</td><td>Report + Addendum</td></tr>
+          <tr><td><span class="tier g">GOLD</span></td><td>One good year at Silver</td><td>Not required</td><td>Report + Addendum</td><td><strong>Addendum only</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin:16px 0 0">So a Silver factory with a Repeat product still goes through the full lab flow. Repeat only lightens the document burden, and only at Gold does it drop the self-inspection report. An item graduates to Repeat by staying in the Addendum; drop it for a year and it comes back as New.</p>
+  </div>
+  <div class="panel">
+    <h2>What the two documents actually ask for</h2>
+    <p class="sub">Read from the Word originals, not the scans. The highlighted placeholders are real content controls.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Document</th><th>Level</th><th>Fields</th><th>Notable</th></tr></thead>
+        <tbody>
+          <tr><td>Agreement v6</td><td>Supplier<br><span style="color:var(--ink-3)">first year only</span></td><td>13 controls</td><td>The effective date is four dropdowns (day / month / two year digits) and is repeated as a date picker in clause 13. The MSTA date in the recitals is a field too.</td></tr>
+          <tr><td>Addendum v3.1</td><td>Factory<br><span style="color:var(--ink-3)">renewed annually</span></td><td>169 controls</td><td>Carries <strong>four</strong> product tables: Everyday / GNFR at item level with WIC number, Seasonal at category level with no WIC, and a separate Gold-repeat table for each. Only one dropdown in the whole document: the awarded scheme.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Open questions for the team</h2>
+    <p class="sub">Things the design cannot settle on its own.</p>
+    <ul class="qlist">
+      <li><b>What can TBG do with each scheme?</b><span>The scheme tabs (Not Rated, Bronze, Silver, Gold, Out of Scope) filter the list today. Once a tier is picked, which actions should each one offer?</span></li>
+      <li><b>How should the Factory and Supplier tables sort?</b><span>Supplier by name A to Z and Factory by SVSI Task Status, or a Create Date column on both, latest first, like the Audit List.</span></li>
+      <li><b>Seasonal items are picked per WIC but written per category.</b><span>The item list selects Seasonal items individually; the Addendum lists Seasonal only as a Product Category. Is that roll-up automatic, or does the buyer choose the categories again when generating?</span></li>
+      <li><b>Validity starts from the Addendum Effective Date, not the completion date.</b><span>In the signed Greatstar example both fall on the same day. If they can differ, which one drives the validity window?</span></li>
+      <li><b>Lab wording is still UL-specific in places.</b><span>"UL Audit" and "Factory previous UL assessment date" remain, but BV can now be selected, so these need neutral wording or a rule.</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>Screens are from the SVSI design file as of 12/Oct/2026. Every card links back to its frame. <a href="%%FIGMA%%" target="_blank" rel="noopener">Open the full Figma board</a>.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var secs=[].slice.call(document.querySelectorAll('section.step'));
+  var items={};
+  [].forEach.call(document.querySelectorAll('#steps li'),function(li){items[li.getAttribute('data-t')]=li;});
+  var label=document.getElementById('nowstep');
+  var order=secs.map(function(s){return s.id;});
+  var current=order[0];
+  function mark(id){
+    current=id;
+    var idx=order.indexOf(id);
+    order.forEach(function(k,i){var li=items[k];if(!li)return;li.classList.toggle('on',i===idx);li.classList.toggle('done',i<idx);});
+    var li=items[id];
+    if(li&&label){var a=li.querySelector('a');label.textContent=a?a.textContent.replace(/^(\d+|—|▶)/,'').trim():id;}
+  }
+  if('IntersectionObserver' in window){
+    var seen={};
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){seen[e.target.id]=e.isIntersecting?e.intersectionRatio:0;});
+      var best=null,bv=-1;order.forEach(function(k){var v=seen[k]||0;if(v>bv){bv=v;best=k;}});
+      if(best&&bv>0)mark(best);
+    },{rootMargin:'-130px 0px -55% 0px',threshold:[0,.01,.2,.5,1]});
+    secs.forEach(function(s){io.observe(s);});
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.altKey||e.ctrlKey||e.metaKey)return;
+    var t=e.target&&e.target.tagName;if(t==='INPUT'||t==='TEXTAREA')return;
+    var d=(e.key==='ArrowRight'||e.key==='PageDown')?1:(e.key==='ArrowLeft'||e.key==='PageUp')?-1:0;
+    if(!d)return;
+    var i=Math.max(0,Math.min(order.length-1,order.indexOf(current)+d));
+    var el=document.getElementById(order[i]);
+    if(el){e.preventDefault();el.scrollIntoView({block:'start'});mark(order[i]);}
+  });
+  mark(order[0]);
+})();
+</script>

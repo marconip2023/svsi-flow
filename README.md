@@ -20,6 +20,21 @@ Seven steps, four roles, in the order a real task runs:
 | 06 · SVSI Team Review | SVSI Team |
 | 07 · Approve & Sign | Buyer, Supplier, SVSI Team |
 
+## Clickable prototype
+
+The page opens with links that play the Figma prototype:
+
+- **End-to-end, everything approved** — one factory from *Set SVSI factory* through
+  Application, Invoice, Lab Audit, QT Review, Ethical Check and SVSI Team Review to the
+  supplier signing and *Complete task*. Switch role with the Lab / Buyer / Supplier chips
+  in the top bar, or press → on a hand-off screen.
+- **Per-role flows** — 8 Buyer, 7 Supplier, 3 Lab, plus Ethical and SVSI Team. These
+  cover the alternatives the end-to-end path skips: return, reject, revise report,
+  filters and detail tabs.
+
+Every screen carries a Lab / Buyer / Supplier switch showing whose screen it is; clicking
+a role goes to that role's home page.
+
 Every screenshot and every list item links straight back to its frame in the
 [SVSI Figma file](https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=0-1),
 so you can jump into the board wherever the discussion goes.
@@ -31,4 +46,7 @@ that still need a decision from the team.
 ## Notes
 
 - Screenshots are a snapshot of the Figma board at build time — the board keeps moving.
-- Single static page. No build step: `index.html` plus `shots/`.
+- Single static page: `index.html` plus `shots/`. Arrow keys ← → move between steps.
+- `src/gen.py` + `src/tpl.html` generate the page body (frame ids, flows, card copy).
+  Edit those, run `python3 src/gen.py` from `src/`, then wrap the output with the
+  `<head>` used in `index.html`.
