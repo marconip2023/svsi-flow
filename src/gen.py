@@ -131,9 +131,10 @@ PROTO='\n'.join(idx)
 # ---------- status by role ----------
 ST=[
  ('Factory invited to SVSI',('Need to Start SVSI','n'),('Need to Start SVSI','n'),None),
- ('Supplier submits the application',('Application Submitted','w'),('Under Review','i'),None),
+ ('Supplier submits; can still edit',('Application Submitted','w'),('Application Submitted','i'),None),
+ ('Buyer opens the check form',('Under Review','w'),('Under Review','i'),None),
  ('Buyer returns it for correction',('Application Returned','i'),('Application Returned','w'),None),
- ('Buyer approves; invoice being issued',('Pending Invoice','i'),('Under Review','i','TBC'),None),
+ ('Buyer approves; invoice being issued',('Pending Invoice','i'),('Pending Invoice','i'),None),
  ('Invoice issued, waiting for payment',('Pending Payment','i'),('Pending Payment','w'),None),
  ('Paid; lab to book the audit',('Pending Audit','i'),('In Progress','i'),('Pending Audit','n')),
  ('Audit date confirmed; audit and report',('Pending Audit','i'),('In Progress','i'),('In Progress','i')),
