@@ -7,7 +7,7 @@ built for internal review of the design before the platform work starts.
 
 ## What it covers
 
-Seven steps, four roles, in the order a real task runs:
+Eight steps, four roles, in the order a real task runs:
 
 | Step | Owner |
 | --- | --- |
@@ -17,8 +17,9 @@ Seven steps, four roles, in the order a real task runs:
 | 03 · Lab Audit | Lab (UL / BV) |
 | 04 · QT Review | Buyer · WBA QT |
 | 05 · Ethical Check | Buyer |
-| 06 · SVSI Team Review | SVSI Team |
-| 07 · Approve & Sign | Buyer, Supplier, SVSI Team |
+| 06 · SVSI Team Final Review & Generate Agreement | SVSI Team |
+| 07 · Supplier Signs | Supplier |
+| 08 · Confirm Supplier Sign & Complete | SVSI Team (validity date goes live) |
 
 ## Clickable prototype
 
@@ -28,7 +29,7 @@ The page opens with links that play the Figma prototype:
   Application, Invoice, Lab Audit, QT Review, Ethical Check and SVSI Team Review to the
   supplier signing and *Complete task*. Switch role with the Lab / Buyer / Supplier chips
   in the top bar, or press → on a hand-off screen.
-- **Per-role flows** — 8 Buyer, 7 Supplier, 3 Lab, plus Ethical and SVSI Team. These
+- **Per-role flows** — 7 Buyer, 7 Supplier, 3 Lab, 1 Ethical and 3 SVSI Team. These
   cover the alternatives the end-to-end path skips: return, reject, revise report,
   filters and detail tabs.
 

@@ -10,7 +10,6 @@ FLOWS={ # key: (node, role, label)
  'B5':('1060:24230','buyer','Factory Detail → Add to SVSI Task'),
  'B6':('2224:17113','buyer','Check application → approve / return / reject'),
  'B7':('1405:9212','buyer','QT review lab result → confirm / revise / reject'),
- 'B8':('1603:19804','buyer','Generate Agreement → upload → complete task'),
  'S1':('3009:38379','supplier','Apply for SVSI, start to submit'),
  'S2':('3662:12154','supplier','Item list bulk actions'),
  'S3':('3012:39313','supplier','View submitted application'),
@@ -23,6 +22,8 @@ FLOWS={ # key: (node, role, label)
  'L3':('3047:43791','lab','Upload revised report'),
  'E1':('3028:11319','team','Ethical review & upload'),
  'T1':('1603:18989','team','SVSI Team review → confirm / return / reject'),
+ 'T2':('1603:19804','team','Final review & generate agreement'),
+ 'T3':('1654:21831','team','Confirm supplier sign → Complete'),
 }
 ROLE={'buyer':'Buyer','supplier':'Supplier','lab':'Lab','team':'SVSI / Ethical'}
 PREF={'B':'Buyer','S':'Supplier','L':'Lab','E':'Ethical','T':'SVSI Team'}
@@ -102,23 +103,29 @@ S.append(step('s5','05','Ethical Check',[('buyer','Buyer sends'),('team','Ethica
  ['E1','B7'],
  [('s12_ethical.png','3374:62256','Send to ethical team','The buyer sends the task to the ethical team. The review type, criteria and items in scope sit on the page, so the reviewer knows what they are judging.','Task page with the Ethical Check action')],
  [('After the check',[('Ethical review, empty','3028:11319'),('Ethical review, filled','2028:8302'),('Ethical check complete','1455:11275')])]))
-S.append(step('s6','06','SVSI Team Review',[('team','SVSI Team')],
- 'The final gate before documents are issued. TBGASL has sole discretion over whether a supplier joins the programme; accepting payment is not acceptance into SVSI. The team can confirm, return the task to QA or to the ethical team, or reject it.',
- ['T1'],
- [('s13_svsi_review.png','1603:18989','Team review','Everything the earlier steps produced, in one place. Final Confirm opens the Confirm Result dialog, where products can still be added or removed.','SVSI team review screen')],
- [('Decisions',[('Confirm result','1603:19480'),('Return to QA','1649:20385'),('Return to ethical team','1603:19556'),('Reject application','1649:20424')])]))
-S.append(step('s7','07','Approve &amp; Sign',[('buyer','Buyer generates'),('supplier','Supplier signs'),('team','SVSI Team completes')],
- 'Two documents come out of ICW. The <strong>Agreement</strong> is supplier-level and first-year only. The <strong>Addendum</strong> is factory-level and renewed every year; it lists exactly which products that factory may self-inspect. The supplier signs offline, the scans come back into ICW, and <strong>Complete task</strong> stamps the self-inspection validity dates and awards the tier.',
- ['B8','S6'],
- [('s14_gen_addendum.png','1773:4050','Generate Addendum','Step 2 of the generate dialog. Every field from the Word template in one form; products are picked here.','Generate addendum dialog with products'),
-  ('s15_complete_task.png','1654:21831','Complete task','The signed documents are in. Complete Task asks for confirmation, because the tier and the validity window cannot be changed afterwards.','Task page ready to complete'),
-  ('s16_completed.png','1656:22657','Completed','The factory\'s current scheme is set and the validity dates appear on the factory record.','Completed task with the scheme awarded')],
- [('The signing route',[('Generate Agreement, step 1','1769:4050'),('Signed documents, ready to upload','1654:21336'),('Upload signed Agreement &amp; Addendum','3629:12009'),('Upload again','3702:15199'),('Supplier signs and uploads','1656:22338'),('Supplier sees the task completed','2771:29996'),('Factory list after completion','3576:14235')])]))
+S.append(step('s6','06','SVSI Team Final Review &amp; Generate Agreement',[('team','SVSI Team')],
+ 'The final gate before documents are issued. TBGASL has sole discretion over whether a supplier joins the programme; accepting payment is not acceptance into SVSI. The team confirms the result, or returns the task to QA or the ethical team, or rejects it. Once confirmed, the same team generates the two documents: the <strong>Agreement</strong> (supplier-level, first year only) and the <strong>Addendum</strong> (factory-level, renewed every year), which lists exactly which products the factory may self-inspect.',
+ ['T1','T2'],
+ [('s13_svsi_review.png','1603:18989','Final review','Everything the earlier steps produced, in one place. Final Confirm opens the Confirm Result dialog, where products can still be added or removed.','SVSI team review screen'),
+  ('s14_gen_addendum.png','4404:35313','Generate Addendum','Step 2 of 2 after the Agreement. Every field from the Word template in one form; products are picked here, and the self-inspection validity start date is set here.','Generate addendum page')],
+ [('Decisions and documents',[('Confirm result','4687:37188'),('Return to QA','1649:20385'),('Return to ethical team','1603:19556'),('Reject task','1649:20424'),('Generate Agreement, step 1 of 2','4404:34941'),('Documents generated, waiting for signature','1654:21336')])]))
+S.append(step('s7','07','Supplier Signs',[('supplier','Supplier')],
+ 'The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. They can replace a file before submitting with <strong>Upload again</strong>. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.',
+ ['S6'],
+ [('s17_supplier_sign.png','1656:22338','Upload signed documents','The task page shows the generated documents to sign; Upload opens the signed-copy dialog.','Supplier task page with documents to sign')],
+ [('The signing route',[('Upload signed Agreement &amp; Addendum','3692:16071'),('Upload again','3702:15178'),('Signed copies submitted','3692:16294')])]))
+S.append(step('s8','08','Confirm Supplier Sign &amp; Complete',[('team','SVSI Team'),('supplier','Supplier sees result')],
+ 'The last step. Once the signed copies are back, the task sits at <strong>Final Review (SVSI)</strong>. The SVSI team checks the signatures and clicks <strong>Complete task</strong>. That click closes the task, awards the tier and makes the <strong>self-inspection validity date live</strong>. Before the validity start date the factory still uses third-party inspection.',
+ ['T3'],
+ [('s15_complete_task.png','1654:21831','Confirm supplier sign','Signed copies on file. Complete Task asks for confirmation, because the tier and the validity window cannot be changed afterwards.','Task page ready to complete'),
+  ('s16_completed.png','1656:22657','Completed','The factory\'s scheme is awarded and the validity dates appear on the factory record.','Completed task with the scheme awarded'),
+  ('s18_supplier_completed.png','2771:29996','Supplier sees it completed','The supplier\'s task shows Completed with the awarded scheme and validity window.','Supplier view of the completed task')],
+ [('After completion',[('Complete Task dialog','1794:3978'),('Factory list after completion','3576:14235')])]))
 
 idx=[]
 for role,keys in [('buyer',[k for k in FLOWS if k[0]=='B']),('supplier',[k for k in FLOWS if k[0]=='S']),('lab',[k for k in FLOWS if k[0]=='L']),('team',[k for k in FLOWS if k[0] in 'ET'])]:
   idx.append(f'<div class="pgroup"><div class="pgh">{chip(role,ROLE[role])}<span class="cnt">{len(keys)} flows</span></div><div class="plist">'+''.join(play(k) for k in keys)+'</div></div>')
-E2E=f'<a class="e2e" href="{proto("952:3937")}" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="et"><b>End-to-end, everything approved</b><span>Set SVSI factory &rarr; Application &rarr; Invoice &rarr; Lab Audit &rarr; QT Review &rarr; Ethical Check &rarr; SVSI Team Review &rarr; Supplier signs &rarr; Complete. Switch role with the Lab / Buyer / Supplier chips in the top bar, or press &rarr;.</span></span></a>'
+E2E=f'<a class="e2e" href="{proto("952:3937")}" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="et"><b>End-to-end, everything approved</b><span>Set SVSI factory &rarr; Application &rarr; Invoice &rarr; Lab Audit &rarr; QT Review &rarr; Ethical Check &rarr; SVSI Team final review &amp; generate agreement &rarr; Supplier signs &rarr; SVSI Team confirms the signature &amp; completes. Switch role with the Lab / Buyer / Supplier chips in the top bar, or press &rarr;.</span></span></a>'
 PROTO='\n'.join(idx)
 tpl=open('tpl.html').read()
 out=tpl.replace('%%STEPS%%','\n\n'.join(S)).replace('%%PROTO%%',PROTO).replace('%%E2E%%',E2E).replace('%%FIGMA%%',fig('0:1'))
