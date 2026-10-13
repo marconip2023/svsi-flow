@@ -90,6 +90,22 @@ h1{font-size:clamp(28px,4.4vw,44px); line-height:1.12; letter-spacing:-.02em; fo
 .e2e .et{display:flex; flex-direction:column; gap:4px; min-width:0}
 .e2e b{font-size:19px; font-weight:700; letter-spacing:-.01em}
 .e2e .et span{color:var(--ink-2); font-size:14px}
+/* status by role */
+:root{--t-s:#1BB135;--t-w:#FFD12E;--t-e:#D42600;--t-i:#196EFF;--t-n:#CCCCCC}
+.st{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--ink);white-space:nowrap}
+.st i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--t-n)}
+.st.s i{background:var(--t-s)} .st.w i{background:var(--t-w)} .st.e i{background:var(--t-e)} .st.i i{background:var(--t-i)} .st.n i{background:var(--t-n)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 16px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:4px}
+.legend .st{font-weight:400;color:var(--ink-2)}
+.stwrap{margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:4px}
+.sttable{min-width:760px}
+.sttable thead th{background:var(--sunk)}
+.sttable tbody th{font-weight:400;color:var(--ink-2);font-size:13.5px;text-transform:none;letter-spacing:0;background:transparent;white-space:normal;border-bottom:1px solid var(--line);width:34%}
+.sttable td,.sttable th{padding:10px 14px}
+.sttable td:first-child{white-space:normal}
+.sttable .sn{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-right:10px}
+.sttable td.none{color:var(--ink-3)}
+.tbc{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-3);border:1px solid var(--line-2);border-radius:2px;padding:0 4px;margin-left:6px}
 .protoidx{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:18px}
 .pgroup{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:16px; min-width:0}
 .pgh{display:flex; align-items:center; gap:10px; margin-bottom:12px}
@@ -165,6 +181,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
     </div>
     <ul class="steps" id="steps">
       <li data-t="proto"><a href="#proto"><span class="n">&#9654;</span>Prototype</a></li>
+      <li data-t="status"><a href="#status"><span class="n">&#9679;</span>Status</a></li>
       <li data-t="s0"><a href="#s0"><span class="n">00</span>Before the task</a></li>
       <li data-t="s1"><a href="#s1"><span class="n">01</span>Application</a></li>
       <li data-t="s2"><a href="#s2"><span class="n">02</span>Invoice</a></li>
@@ -202,6 +219,22 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
   <div class="protoidx">
 %%PROTO%%
   </div>
+</section>
+
+<section class="step" id="status">
+  <div class="stephead">
+    <span class="stepnum">&#9679;</span>
+    <div><h2>Task status, by role</h2></div>
+  </div>
+  <p class="intro">Each role sees its own status for the same task. Read across a row to see what Buyer, Supplier and Lab each see at that moment. A dash means that role does not see the task at that stage. The colour says whose move it is.</p>
+  <div class="legend">
+    <span class="st w"><i></i>Your turn to act</span>
+    <span class="st i"><i></i>Waiting on someone else</span>
+    <span class="st n"><i></i>Not started</span>
+    <span class="st s"><i></i>Done</span>
+    <span class="st e"><i></i>Rejected</span>
+  </div>
+%%STATUS%%
 </section>
 
 %%STEPS%%

@@ -36,6 +36,12 @@ The page opens with links that play the Figma prototype:
 Every screen carries a Lab / Buyer / Supplier switch showing whose screen it is; clicking
 a role goes to that role's home page.
 
+## Status by role
+
+A side-by-side table shows what Buyer, Supplier and Lab each see for the same task at
+every stage, with the same colours as the Figma status chips. A dash means that role does
+not see the task at that stage.
+
 Every screenshot and every list item links straight back to its frame in the
 [SVSI Figma file](https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=0-1),
 so you can jump into the board wherever the discussion goes.

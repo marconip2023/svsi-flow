@@ -127,7 +127,38 @@ for role,keys in [('buyer',[k for k in FLOWS if k[0]=='B']),('supplier',[k for k
   idx.append(f'<div class="pgroup"><div class="pgh">{chip(role,ROLE[role])}<span class="cnt">{len(keys)} flows</span></div><div class="plist">'+''.join(play(k) for k in keys)+'</div></div>')
 E2E=f'<a class="e2e" href="{proto("952:3937")}" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="et"><b>End-to-end, everything approved</b><span>Set SVSI factory &rarr; Application &rarr; Invoice &rarr; Lab Audit &rarr; QT Review &rarr; Ethical Check &rarr; SVSI Team final review &amp; generate agreement &rarr; Supplier signs &rarr; SVSI Team confirms the signature &amp; completes. Switch role with the Lab / Buyer / Supplier chips in the top bar, or press &rarr;.</span></span></a>'
 PROTO='\n'.join(idx)
+
+# ---------- status by role ----------
+ST=[
+ ('Factory invited to SVSI',('Need to Start SVSI','n'),('Need to Start SVSI','n'),None),
+ ('Supplier submits the application',('Application Submitted','w'),('Under Review','i'),None),
+ ('Buyer returns it for correction',('Application Returned','i'),('Application Returned','w'),None),
+ ('Buyer approves; invoice being issued',('Pending Invoice','i'),('Under Review','i','TBC'),None),
+ ('Invoice issued, waiting for payment',('Pending Payment','i'),('Pending Payment','w'),None),
+ ('Paid; lab to book the audit',('Pending Audit','i'),('In Progress','i'),('Pending Audit','n')),
+ ('Audit date confirmed; audit and report',('Pending Audit','i'),('In Progress','i'),('In Progress','i')),
+ ('Report uploaded; QA reviews',('Result Review (QA)','w'),('In Progress','i'),('Completed','s')),
+ ('QA asks for a revised report',('Report Return','i'),('In Progress','i'),('Revise Report','w')),
+ ('Ethical team reviews',('Result Review (Ethical)','i'),('In Progress','i'),('Completed','s')),
+ ('SVSI team reviews the result',('Result Review (SVSI)','w'),('In Progress','i'),('Completed','s')),
+ ('SVSI team generates Agreement & Addendum',('Document In Progress','w'),('In Progress','i'),('Completed','s')),
+ ('Waiting for the supplier to sign',('Pending Sign Off','i'),('Pending Sign Off','w'),('Completed','s')),
+ ('Signed copies back; SVSI final review',('Final Review (SVSI)','w'),('Final Review (SVSI)','i'),('Completed','s')),
+ ('Task completed; validity goes live',('Completed','s'),('Completed','s'),('Completed','s')),
+ ('Application or task rejected',('Rejected','e'),('Rejected','e'),None),
+]
+def stc(x):
+  if not x: return '<td class="none">&mdash;</td>'
+  tbc=' <span class="tbc">TBC</span>' if len(x)>2 else ''
+  return f'<td><span class="st {x[1]}"><i></i>{html.escape(x[0])}</span>{tbc}</td>'
+rows='\n'.join(f'<tr><th scope="row"><span class="sn">{i+1:02d}</span>{html.escape(a)}</th>{stc(b)}{stc(c)}{stc(d)}</tr>' for i,(a,b,c,d) in enumerate(ST))
+STATUS=f"""<div class="tablewrap stwrap"><table class="sttable">
+<thead><tr><th>Stage</th><th><span class="chip buyer"><span class="dot"></span>Buyer &middot; SVSI Team</span></th><th><span class="chip supplier"><span class="dot"></span>Supplier</span></th><th><span class="chip lab"><span class="dot"></span>Lab</span></th></tr></thead>
+<tbody>
+{rows}
+</tbody></table></div>"""
+
 tpl=open('tpl.html').read()
-out=tpl.replace('%%STEPS%%','\n\n'.join(S)).replace('%%PROTO%%',PROTO).replace('%%E2E%%',E2E).replace('%%FIGMA%%',fig('0:1'))
+out=tpl.replace('%%STEPS%%','\n\n'.join(S)).replace('%%PROTO%%',PROTO).replace('%%E2E%%',E2E).replace('%%STATUS%%',STATUS).replace('%%FIGMA%%',fig('0:1'))
 open('index.html','w').write(out)
 print(len(out))

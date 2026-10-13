@@ -98,6 +98,22 @@ h1{font-size:clamp(28px,4.4vw,44px); line-height:1.12; letter-spacing:-.02em; fo
 .e2e .et{display:flex; flex-direction:column; gap:4px; min-width:0}
 .e2e b{font-size:19px; font-weight:700; letter-spacing:-.01em}
 .e2e .et span{color:var(--ink-2); font-size:14px}
+/* status by role */
+:root{--t-s:#1BB135;--t-w:#FFD12E;--t-e:#D42600;--t-i:#196EFF;--t-n:#CCCCCC}
+.st{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--ink);white-space:nowrap}
+.st i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--t-n)}
+.st.s i{background:var(--t-s)} .st.w i{background:var(--t-w)} .st.e i{background:var(--t-e)} .st.i i{background:var(--t-i)} .st.n i{background:var(--t-n)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 16px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:4px}
+.legend .st{font-weight:400;color:var(--ink-2)}
+.stwrap{margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:4px}
+.sttable{min-width:760px}
+.sttable thead th{background:var(--sunk)}
+.sttable tbody th{font-weight:400;color:var(--ink-2);font-size:13.5px;text-transform:none;letter-spacing:0;background:transparent;white-space:normal;border-bottom:1px solid var(--line);width:34%}
+.sttable td,.sttable th{padding:10px 14px}
+.sttable td:first-child{white-space:normal}
+.sttable .sn{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-right:10px}
+.sttable td.none{color:var(--ink-3)}
+.tbc{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-3);border:1px solid var(--line-2);border-radius:2px;padding:0 4px;margin-left:6px}
 .protoidx{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:18px}
 .pgroup{background:var(--card); border:1px solid var(--line); border-radius:4px; padding:16px; min-width:0}
 .pgh{display:flex; align-items:center; gap:10px; margin-bottom:12px}
@@ -174,6 +190,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
     </div>
     <ul class="steps" id="steps">
       <li data-t="proto"><a href="#proto"><span class="n">&#9654;</span>Prototype</a></li>
+      <li data-t="status"><a href="#status"><span class="n">&#9679;</span>Status</a></li>
       <li data-t="s0"><a href="#s0"><span class="n">00</span>Before the task</a></li>
       <li data-t="s1"><a href="#s1"><span class="n">01</span>Application</a></li>
       <li data-t="s2"><a href="#s2"><span class="n">02</span>Invoice</a></li>
@@ -214,6 +231,41 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
 <div class="pgroup"><div class="pgh"><span class="chip lab"><span class="dot"></span>Lab</span><span class="cnt">3 flows</span></div><div class="plist"><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=291-3947&starting-point-node-id=291%3A3947&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 1</span>Audit List, filter &amp; sort</a><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=3012-40666&starting-point-node-id=3012%3A40666&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 2</span>Confirm audit date → upload result → complete</a><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=3047-43791&starting-point-node-id=3047%3A43791&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 3</span>Upload revised report</a></div></div>
 <div class="pgroup"><div class="pgh"><span class="chip team"><span class="dot"></span>SVSI / Ethical</span><span class="cnt">4 flows</span></div><div class="plist"><a class="play team" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=3028-11319&starting-point-node-id=3028%3A11319&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Ethical 1</span>Ethical review &amp; upload</a><a class="play team" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1603-18989&starting-point-node-id=1603%3A18989&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">SVSI Team 1</span>SVSI Team review → confirm / return / reject</a><a class="play team" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1603-19804&starting-point-node-id=1603%3A19804&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">SVSI Team 2</span>Final review &amp; generate agreement</a><a class="play team" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1654-21831&starting-point-node-id=1654%3A21831&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">SVSI Team 3</span>Confirm supplier sign → Complete</a></div></div>
   </div>
+</section>
+
+<section class="step" id="status">
+  <div class="stephead">
+    <span class="stepnum">&#9679;</span>
+    <div><h2>Task status, by role</h2></div>
+  </div>
+  <p class="intro">Each role sees its own status for the same task. Read across a row to see what Buyer, Supplier and Lab each see at that moment. A dash means that role does not see the task at that stage. The colour says whose move it is.</p>
+  <div class="legend">
+    <span class="st w"><i></i>Your turn to act</span>
+    <span class="st i"><i></i>Waiting on someone else</span>
+    <span class="st n"><i></i>Not started</span>
+    <span class="st s"><i></i>Done</span>
+    <span class="st e"><i></i>Rejected</span>
+  </div>
+<div class="tablewrap stwrap"><table class="sttable">
+<thead><tr><th>Stage</th><th><span class="chip buyer"><span class="dot"></span>Buyer &middot; SVSI Team</span></th><th><span class="chip supplier"><span class="dot"></span>Supplier</span></th><th><span class="chip lab"><span class="dot"></span>Lab</span></th></tr></thead>
+<tbody>
+<tr><th scope="row"><span class="sn">01</span>Factory invited to SVSI</th><td><span class="st n"><i></i>Need to Start SVSI</span></td><td><span class="st n"><i></i>Need to Start SVSI</span></td><td class="none">&mdash;</td></tr>
+<tr><th scope="row"><span class="sn">02</span>Supplier submits the application</th><td><span class="st w"><i></i>Application Submitted</span></td><td><span class="st i"><i></i>Under Review</span></td><td class="none">&mdash;</td></tr>
+<tr><th scope="row"><span class="sn">03</span>Buyer returns it for correction</th><td><span class="st i"><i></i>Application Returned</span></td><td><span class="st w"><i></i>Application Returned</span></td><td class="none">&mdash;</td></tr>
+<tr><th scope="row"><span class="sn">04</span>Buyer approves; invoice being issued</th><td><span class="st i"><i></i>Pending Invoice</span></td><td><span class="st i"><i></i>Under Review</span> <span class="tbc">TBC</span></td><td class="none">&mdash;</td></tr>
+<tr><th scope="row"><span class="sn">05</span>Invoice issued, waiting for payment</th><td><span class="st i"><i></i>Pending Payment</span></td><td><span class="st w"><i></i>Pending Payment</span></td><td class="none">&mdash;</td></tr>
+<tr><th scope="row"><span class="sn">06</span>Paid; lab to book the audit</th><td><span class="st i"><i></i>Pending Audit</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st n"><i></i>Pending Audit</span></td></tr>
+<tr><th scope="row"><span class="sn">07</span>Audit date confirmed; audit and report</th><td><span class="st i"><i></i>Pending Audit</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st i"><i></i>In Progress</span></td></tr>
+<tr><th scope="row"><span class="sn">08</span>Report uploaded; QA reviews</th><td><span class="st w"><i></i>Result Review (QA)</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">09</span>QA asks for a revised report</th><td><span class="st i"><i></i>Report Return</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st w"><i></i>Revise Report</span></td></tr>
+<tr><th scope="row"><span class="sn">10</span>Ethical team reviews</th><td><span class="st i"><i></i>Result Review (Ethical)</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">11</span>SVSI team reviews the result</th><td><span class="st w"><i></i>Result Review (SVSI)</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">12</span>SVSI team generates Agreement &amp; Addendum</th><td><span class="st w"><i></i>Document In Progress</span></td><td><span class="st i"><i></i>In Progress</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">13</span>Waiting for the supplier to sign</th><td><span class="st i"><i></i>Pending Sign Off</span></td><td><span class="st w"><i></i>Pending Sign Off</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">14</span>Signed copies back; SVSI final review</th><td><span class="st w"><i></i>Final Review (SVSI)</span></td><td><span class="st i"><i></i>Final Review (SVSI)</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">15</span>Task completed; validity goes live</th><td><span class="st s"><i></i>Completed</span></td><td><span class="st s"><i></i>Completed</span></td><td><span class="st s"><i></i>Completed</span></td></tr>
+<tr><th scope="row"><span class="sn">16</span>Application or task rejected</th><td><span class="st e"><i></i>Rejected</span></td><td><span class="st e"><i></i>Rejected</span></td><td class="none">&mdash;</td></tr>
+</tbody></table></div>
 </section>
 
 <section class="step" id="s0">
