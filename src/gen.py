@@ -110,10 +110,10 @@ S.append(step('s6','06','SVSI Team Final Review &amp; Generate Agreement',[('tea
   ('s14_gen_addendum.png','4404:35313','Generate Addendum','Step 2 of 2 after the Agreement. Every field from the Word template in one form; products are picked here, and the self-inspection validity start date is set here.','Generate addendum page')],
  [('Decisions and documents',[('Confirm result','4687:37188'),('Return to QA','1649:20385'),('Return to ethical team','1603:19556'),('Reject task','1649:20424'),('Generate Agreement, step 1 of 2','4404:34941'),('Documents generated, waiting for signature','1654:21336')])]))
 S.append(step('s7','07','Supplier Signs',[('supplier','Supplier')],
- 'The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. They can replace a file before submitting with <strong>Upload again</strong>. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.',
+ 'The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. Choosing a new file replaces the previous one, so there is no separate re-upload step. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.',
  ['S6'],
  [('s17_supplier_sign.png','1656:22338','Upload signed documents','The task page shows the generated documents to sign; Upload opens the signed-copy dialog.','Supplier task page with documents to sign')],
- [('The signing route',[('Upload signed Agreement &amp; Addendum','3692:16071'),('Upload again','3702:15178'),('Signed copies submitted','3692:16294')])]))
+ [('The signing route',[('Upload signed Agreement &amp; Addendum','3692:16071'),('Signed copies submitted','3692:16294')])]))
 S.append(step('s8','08','Confirm Supplier Sign &amp; Complete',[('team','SVSI Team'),('supplier','Supplier sees result')],
  'The last step. Once the signed copies are back, the task sits at <strong>Final Review (SVSI)</strong>. The SVSI team checks the signatures and clicks <strong>Complete task</strong>. That click closes the task, awards the tier and makes the <strong>self-inspection validity date live</strong>. Before the validity start date the factory still uses third-party inspection.',
  ['T3'],
