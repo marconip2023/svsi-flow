@@ -9,7 +9,9 @@ FLOWS={ # key: (node, role, label)
  'B4':('832:18557','buyer','Factory Detail → Moving out of SVSI'),
  'B5':('1060:24230','buyer','Factory Detail → Add to SVSI Task'),
  'B6':('2224:17113','buyer','Check application → approve / return / reject'),
- 'B7':('1405:9212','buyer','QT review lab result → confirm / revise / reject'),
+ 'B7':('1405:9212','buyer','QT review lab result → revise / reject'),
+ 'Q1':('4973:21159','buyer','Confirm result → generate documents → preview → send'),
+ 'Q2':('1654:21336','buyer','Final review (QT) → complete'),
  'S1':('3009:38379','supplier','Apply for SVSI, start to submit'),
  'S2':('3662:12154','supplier','Item list bulk actions'),
  'S3':('3012:39313','supplier','View submitted application'),
@@ -21,12 +23,10 @@ FLOWS={ # key: (node, role, label)
  'L2':('3012:40666','lab','Confirm audit date → upload result → complete'),
  'L3':('3047:43791','lab','Upload revised report'),
  'E1':('3028:11319','team','Ethical review & upload'),
- 'T1':('1603:18989','team','SVSI Team review → confirm / return / reject'),
- 'T2':('1603:19804','team','Final review & generate agreement'),
- 'T3':('1654:21831','team','Confirm supplier sign → Complete'),
+ 'T1':('4976:23224','team','Review once → comment on items → confirm'),
 }
 ROLE={'buyer':'Buyer','supplier':'Supplier','lab':'Lab','team':'SVSI / Ethical'}
-PREF={'B':'Buyer','S':'Supplier','L':'Lab','E':'Ethical','T':'SVSI Team'}
+PREF={'B':'Buyer','Q':'QT','S':'Supplier','L':'Lab','E':'Ethical','T':'SVSI Team'}
 def flowname(k): return f'{PREF[k[0]]} {k[1:]} · {FLOWS[k][2]}'
 def play(k):
   n,r,l=FLOWS[k]
@@ -93,39 +93,41 @@ S.append(step('s3','03','Lab Audit',[('lab','Lab &middot; UL / BV')],
  [('s09_lab_detail.png','3012:40666','Lab task detail','The lab\'s working screen for one factory audit task. Actions opens Update Status.','Lab task detail for a factory audit'),
   ('s10_lab_upload.png','1390:4580','Upload result &amp; report','Empty state first. Update &amp; Upload stays disabled until a result is chosen. Audit data is entered once, not re-keyed per report.','Lab upload result and report, empty state')],
  [('The rest of the lab flow',[('Lab home dashboard','291:3947'),('Audit list','291:2582'),('Audit list, Task Status filter','3697:14554'),('Audit list, sort by date','3706:15161'),('Select update type','291:8393'),('Confirm audit date','376:3134'),('Uploaded, result and findings','376:3970'),('Complete, confirm','376:4611'),('Upload revised report','1455:11943')])]))
-S.append(step('s4','04','QT Review',[('buyer','Buyer &middot; WBA QT')],
- 'QT reads the lab\'s report and result and takes one of three routes: <strong>confirm</strong> and move on, <strong>request a revised report</strong> from the lab, or <strong>reject</strong> it. Only once the result is confirmed does the task carry an Audit Result, an Audit Report Completed Date, and a findings summary.',
- ['B7'],
- [('s11_qt_review.png','1405:9212','Report &amp; result','Result, findings breakdown and the lab\'s documents on one page, under the task\'s own Basic information.','Buyer reviewing the uploaded report and result')],
- [('The three decisions',[('Confirm result','1043:23844'),('Request revised report','1448:9588'),('Reject task','1448:9626')])]))
-S.append(step('s5','05','Ethical Check',[('buyer','Buyer sends'),('team','Ethical team reviews')],
- 'A separate annual product performance review, run alongside the factory audit rather than inside it. Phase 1 is an uploaded SVSI evaluation spreadsheet judged on 1506 for 52 weeks, VOC, star rating and the past year\'s inspection history. Phase 2 is meant to replace that upload with figures pulled from ICW for the buyer to verify.',
- ['E1','B7'],
- [('s12_ethical.png','3374:62256','Send to ethical team','The buyer sends the task to the ethical team. The review type, criteria and items in scope sit on the page, so the reviewer knows what they are judging.','Task page with the Ethical Check action')],
- [('After the check',[('Ethical review, empty','3028:11319'),('Ethical review, filled','2028:8302'),('Ethical check complete','1455:11275')])]))
-S.append(step('s6','06','SVSI Team Final Review &amp; Generate Agreement',[('team','SVSI Team')],
- 'The final gate before documents are issued. TBGASL has sole discretion over whether a supplier joins the programme; accepting payment is not acceptance into SVSI. The team confirms the result, or returns the task to QA or the ethical team, or rejects it. Once confirmed, the same team generates the two documents: the <strong>Agreement</strong> (supplier-level, first year only) and the <strong>Addendum</strong> (factory-level, renewed every year), which lists exactly which products the factory may self-inspect.',
- ['T1','T2'],
- [('s13_svsi_review.png','1603:18989','Final review','Everything the earlier steps produced, in one place. Final Confirm opens the Confirm Result dialog, where products can still be added or removed.','SVSI team review screen'),
-  ('s14_gen_addendum.png','4404:35313','Generate Addendum','Step 2 of 2 after the Agreement. Every field from the Word template in one form; products are picked here, and the self-inspection validity start date is set here.','Generate addendum page')],
- [('Decisions and documents',[('Confirm result','4687:37188'),('Return to QA','1649:20385'),('Return to ethical team','1603:19556'),('Reject task','1649:20424'),('Generate Agreement, step 1 of 2','4404:34941'),('Documents generated, waiting for signature','1654:21336')])]))
+S.append(step('s4','04','QT Review, Documents &amp; Preview',[('buyer','Buyer &middot; WBA QT')],
+ 'QT reads the lab\'s report and result. If it needs work, QT requests a revised report or rejects the task. Otherwise QT does everything in one pass: <strong>confirms the result</strong> with a remark and the item list, <strong>generates the Agreement and the Addendum</strong>, then <strong>previews</strong> all of it before sending. From the preview QT sends the task either straight to the SVSI team or to the ethical team first.',
+ ['Q1','B7'],
+ [('s11_qt_review.png','4973:21398','Confirm result','Remark, documents and the items for final approval, in one dialog over the task.','Confirm result dialog'),
+  ('s19_qt_preview.png','4976:21685','Preview, then send','The result and remark, documents, item list, Agreement and Addendum on one page. Send to the ethical team, or straight to the SVSI team.','QT preview of result, agreement and addendum')],
+ [('Steps and other decisions',[('Review lab result','4973:21159'),('Generate Agreement','4973:21972'),('Generate Addendum','4973:22289'),('Request revised report','1448:9588'),('Reject task','1448:9626')])]))
+S.append(step('s5','05','Ethical Check (optional)',[('buyer','QT decides'),('team','Ethical team reviews')],
+ 'The ethical check is now optional. QT can skip it and send straight to the SVSI team; while the SVSI team is reviewing, QT can still <strong>send the task to the ethical team</strong>. If it goes to the ethical team first, they enter the score, score date, remark and documents, reconfirm, and the task moves on to the SVSI team.',
+ ['E1','Q1'],
+ [('s12_ethical.png','4976:22746','Sent straight to the SVSI team','Status Result Review (SVSI). QT still has Send to Ethical Team on the task.','Task sent to SVSI with send-to-ethical button'),
+  ('s20_sent_ethical.png','4976:23042','Sent to the ethical team first','Status Result Review (Ethical) until the ethical team submits.','Task sent to the ethical team')],
+ [('Ethical team screens',[('Ethical review, empty','3028:11319'),('Score date picker','4950:21039'),('Ethical review, filled','2028:8302'),('Reconfirm before submitting','3785:22004')])]))
+S.append(step('s6','06','SVSI Team Review',[('team','SVSI Team')],
+ 'The SVSI team approves <strong>once</strong>. They see everything QT prepared and can return the task to QA or to the ethical team, or reject it. When they confirm, a preview shows QT\'s remark, documents, item list, Agreement and Addendum. If something is off, they leave a <strong>comment on the item</strong> (visible to QT only) instead of sending it back. Confirming sends the documents to the supplier.',
+ ['T1'],
+ [('s13_svsi_review.png','4976:23224','Result review','Reject task, return to QA, return to ethical team, or confirm.','SVSI team review screen'),
+  ('s21_svsi_preview.png','4976:23490','Preview &amp; comment','Same preview as QT, with an SVSI comment column on the item list.','SVSI preview with item comments')],
+ [('Decisions',[('Return to QA','1649:20385'),('Return to ethical team','1603:19556'),('Reject task','1649:20424')])]))
 S.append(step('s7','07','Supplier Signs',[('supplier','Supplier')],
- 'The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. Choosing a new file replaces the previous one, so there is no separate re-upload step. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.',
+ 'The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. Choosing a new file replaces the previous one. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.',
  ['S6'],
- [('s17_supplier_sign.png','1656:22338','Upload signed documents','The task page shows the generated documents to sign; Upload opens the signed-copy dialog.','Supplier task page with documents to sign')],
+ [('s17_supplier_sign.png','4976:24078','Pending sign off','Sent automatically when the SVSI team confirms. Upload opens the signed-copy dialog.','Supplier task page with documents to sign')],
  [('The signing route',[('Upload signed Agreement &amp; Addendum','3692:16071'),('Signed copies submitted','3692:16294')])]))
-S.append(step('s8','08','Confirm Supplier Sign &amp; Complete',[('team','SVSI Team'),('supplier','Supplier sees result')],
- 'The last step. Once the signed copies are back, the task sits at <strong>Final Review (SVSI)</strong>. The SVSI team checks the signatures and clicks <strong>Complete task</strong>. That click closes the task, awards the tier and makes the <strong>self-inspection validity date live</strong>. Before the validity start date the factory still uses third-party inspection.',
- ['T3'],
- [('s15_complete_task.png','1654:21831','Confirm supplier sign','Signed copies on file. Complete Task asks for confirmation, because the tier and the validity window cannot be changed afterwards.','Task page ready to complete'),
-  ('s16_completed.png','1656:22657','Completed','The factory\'s scheme is awarded and the validity dates appear on the factory record.','Completed task with the scheme awarded'),
-  ('s18_supplier_completed.png','2771:29996','Supplier sees it completed','The supplier\'s task shows Completed with the awarded scheme and validity window.','Supplier view of the completed task')],
- [('After completion',[('Complete Task dialog','1794:3978'),('Factory list after completion','3576:14235')])]))
+S.append(step('s8','08','QT Final Review &amp; Complete',[('buyer','QT'),('supplier','Supplier sees result')],
+ 'The signed copies come back to QT at <strong>Final Review (QT)</strong>. QT checks the signatures and clicks <strong>Complete task</strong>. That closes the task, awards the tier and makes the <strong>self-inspection validity date live</strong>. Before the validity start date the factory still uses third-party inspection.',
+ ['Q2'],
+ [('s22_qt_final.png','1654:21336','Final review (QT)','Signed copies on file and waiting for QT.','QT final review'),
+  ('s15_complete_task.png','1654:21831','Complete task','Complete Task asks for confirmation, because the tier and the validity window cannot be changed afterwards.','Task page ready to complete'),
+  ('s16_completed.png','1656:22657','Completed','The factory\'s scheme is awarded and the validity dates appear on the factory record.','Completed task')],
+ [('After completion',[('Complete Task dialog','1794:3978'),('Supplier sees it completed','2771:29996'),('Factory list after completion','3576:14235')])]))
 
 idx=[]
-for role,keys in [('buyer',[k for k in FLOWS if k[0]=='B']),('supplier',[k for k in FLOWS if k[0]=='S']),('lab',[k for k in FLOWS if k[0]=='L']),('team',[k for k in FLOWS if k[0] in 'ET'])]:
+for role,keys in [('buyer',[k for k in FLOWS if k[0] in 'BQ']),('supplier',[k for k in FLOWS if k[0]=='S']),('lab',[k for k in FLOWS if k[0]=='L']),('team',[k for k in FLOWS if k[0] in 'ET'])]:
   idx.append(f'<div class="pgroup"><div class="pgh">{chip(role,ROLE[role])}<span class="cnt">{len(keys)} flows</span></div><div class="plist">'+''.join(play(k) for k in keys)+'</div></div>')
-E2E=f'<a class="e2e" href="{proto("952:3937")}" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="et"><b>End-to-end, everything approved</b><span>Set SVSI factory &rarr; Application &rarr; Invoice &rarr; Lab Audit &rarr; QT Review &rarr; Ethical Check &rarr; SVSI Team final review &amp; generate agreement &rarr; Supplier signs &rarr; SVSI Team confirms the signature &amp; completes. Switch role with the Lab / Buyer / Supplier chips in the top bar, or press &rarr;.</span></span></a>'
+E2E=f'<a class="e2e" href="{proto("952:3937")}" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="et"><b>End-to-end, everything approved</b><span>Set SVSI factory &rarr; Application &rarr; Invoice &rarr; Lab Audit &rarr; QT Review &rarr; Ethical Check &rarr; QT confirms, generates the documents &amp; previews &rarr; Ethical (optional) &rarr; SVSI Team reviews once &rarr; Supplier signs &rarr; QT final review &amp; completes. Switch role with the Lab / Buyer / Supplier chips in the top bar, or press &rarr;.</span></span></a>'
 PROTO='\n'.join(idx)
 
 # ---------- status by role ----------
@@ -139,13 +141,12 @@ ST=[
  ('Paid; lab to book the audit',('Pending Audit','i'),('In Progress','i'),('Pending Audit','n')),
  ('Audit date confirmed; audit and report',('Pending Audit','i'),('In Progress','i'),('In Progress','i')),
  ('Lab uploads the report and result',('Pending Audit','i'),('In Progress','i'),('In Progress - Upload Report & Result','i')),
- ('Lab completes; QA reviews the result',('Result Review (QA)','w'),('In Progress','i'),('Completed','s')),
+ ('Lab completes; QT confirms, generates the documents and previews',('Result Review (QA)','w'),('In Progress','i'),('Completed','s')),
  ('QA asks for a revised report',('Report Return','i'),('In Progress','i'),('Revise Report','w')),
- ('Ethical team reviews',('Result Review (Ethical)','w'),('In Progress','i'),('Completed','s')),
- ('SVSI team reviews the result',('Result Review (SVSI)','w'),('In Progress','i'),('Completed','s')),
- ('SVSI team generates Agreement & Addendum',('Document In Progress','w'),('In Progress','i'),('Completed','s')),
+ ('Ethical team reviews (optional)',('Result Review (Ethical)','w'),('In Progress','i'),('Completed','s')),
+ ('SVSI team reviews once and comments on items',('Result Review (SVSI)','w'),('In Progress','i'),('Completed','s')),
  ('Waiting for the supplier to sign',('Pending Sign Off','w'),('Pending Sign Off','w'),('Completed','s')),
- ('Signed copies back; SVSI final review',('Final Review (SVSI)','w'),('Final Review (SVSI)','w'),('Completed','s')),
+ ('Signed copies back; QT final review',('Final Review (QT)','w'),('Final Review (QT)','w'),('Completed','s')),
  ('Task completed; validity goes live',('Completed','s'),('Completed','s'),('Completed','s')),
  ('Application or task rejected',('Rejected','e'),('Rejected','e'),None),
 ]
