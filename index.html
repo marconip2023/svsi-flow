@@ -340,7 +340,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=2534-7740" target="_blank" rel="noopener"><img src="shots/s05_item_list.png" alt="Item list with products added" loading="lazy"></a>
       <div class="body">
         <h3>Item list</h3>
-        <p>Products are added from a dialog. Per row: first shipped date and who inspects, self-inspection or a third-party lab. Several rows can be filled at once with bulk actions.</p>
+        <p>Products are added from a dialog. Per row: first shipped date and the previous inspection party (self-inspection or a third-party lab). SVSI product category and 1506 return % are filled later by QT. Several rows can be filled at once with bulk actions; on a narrow screen the table scrolls sideways.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=2534-7740" target="_blank" rel="noopener">Open in Figma <span class="id">2534:7740</span></a>
       </div>
     </div>
@@ -417,7 +417,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <div class="actors"><span class="chip lab"><span class="dot"></span>Lab &middot; UL Audit</span></div>
     </div>
   </div>
-  <p class="intro">The lab has its own view with its own lifecycle: <em>Pending Audit &rarr; In Progress &rarr; In Progress - Upload Report &amp; Result &rarr; Audit Completed</em>. They confirm the audit date, run the on-site factory assessment, then upload the report with both an audit result and an inspection result. <strong>Findings are optional</strong>: Major NC, Minor NC and Observation / OFI entries are added only if there are any.</p>
+  <p class="intro">The lab has its own view with its own lifecycle: <em>Pending Audit &rarr; In Progress &rarr; In Progress - Upload Report &amp; Result &rarr; Audit Completed</em>. They confirm the audit date, run the on-site factory assessment, then upload the report with <strong>two results</strong>: an Audit Result and an Inspection Result, each with its own result, audit date and remark. <strong>Findings are optional</strong>: Major NC, Minor NC and Observation / OFI entries are added only if there are any.</p>
   <div class="plays"><span class="pl">Play the prototype</span><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=291-3947&starting-point-node-id=291%3A3947&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 1</span>Audit List, filter &amp; sort</a><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=3012-40666&starting-point-node-id=3012%3A40666&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 2</span>Confirm audit date → upload result → complete</a><a class="play lab" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=3047-43791&starting-point-node-id=3047%3A43791&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Lab 3</span>Upload revised report</a></div>
   <div class="frames">
     <div class="frame">
@@ -432,7 +432,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1390-4580" target="_blank" rel="noopener"><img src="shots/s10_lab_upload.png" alt="Lab upload result and report, empty state" loading="lazy"></a>
       <div class="body">
         <h3>Upload result &amp; report</h3>
-        <p>Empty state first. Update &amp; Upload stays disabled until a result is chosen. Audit data is entered once, not re-keyed per report.</p>
+        <p>Empty state first. Audit Result and Inspection Result each take a result, audit date and remark. Update &amp; Upload stays disabled until a result is chosen.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1390-4580" target="_blank" rel="noopener">Open in Figma <span class="id">1390:4580</span></a>
       </div>
     </div>
@@ -461,14 +461,14 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <div class="actors"><span class="chip buyer"><span class="dot"></span>QT</span></div>
     </div>
   </div>
-  <p class="intro">QT reads the lab's report and result. If it needs work, QT requests a revised report or rejects the task. Otherwise QT does everything in one pass: <strong>confirms the result</strong> with a remark and the item list, fills the <strong>Agreement and Addendum in one step</strong> (parties, factory, dates and sign information), then <strong>previews</strong> all of it before sending. Three steps in one dialog: Remark and items &rarr; Agreement &amp; Addendum &rarr; Preview. From the preview QT sends the task either straight to the SVSI team or to the ethical team first.</p>
+  <p class="intro">QT reads the lab's report and result. If it needs work, QT requests a revised report or rejects the task. Otherwise QT does everything in one pass: <strong>confirms the result</strong> with a remark and the item list, fills the <strong>Agreement and Addendum in one step</strong> (parties, factory, dates and sign information), then <strong>previews</strong> all of it before sending. The Agreement and the Addendum are generated as <strong>two separate PDFs</strong>. Three steps in one dialog: Remark and items &rarr; Agreement &amp; Addendum &rarr; Preview. From the preview QT sends the task either straight to the SVSI team or to the ethical team first.</p>
   <div class="plays"><span class="pl">Play the prototype</span><a class="play buyer" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1405-9212&starting-point-node-id=1405%3A9212&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">QT 7</span>Review result → confirm, generate, preview → send</a><a class="play buyer" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=5415-45423&starting-point-node-id=5415%3A45423&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">QT 8</span>Send straight to SVSI (skip ethical)</a></div>
   <div class="frames">
     <div class="frame">
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4990-22447" target="_blank" rel="noopener"><img src="shots/s11_qt_review.png" alt="Confirm result dialog" loading="lazy"></a>
       <div class="body">
         <h3>Confirm result</h3>
-        <p>Remark, documents and the items for final approval in one dialog. QT fills 1506 return %, first shipped date, inspection party and the SVSI product category for seasonal items.</p>
+        <p>Remark, documents and the items for final approval in one dialog. QT fills 1506 return %, first shipped date, previous inspection party and the SVSI product category for seasonal items, and sees <strong>Fail Inspection</strong> (Yes / No) per item. The table scrolls sideways instead of squeezing columns.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4990-22447" target="_blank" rel="noopener">Open in Figma <span class="id">4990:22447</span></a>
       </div>
     </div>
@@ -476,7 +476,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4990-23021" target="_blank" rel="noopener"><img src="shots/s24_gen_agreement.png" alt="Generate Agreement and Addendum step" loading="lazy"></a>
       <div class="body">
         <h3>Generate Agreement &amp; Addendum</h3>
-        <p>One form for both documents: parties, factory, dates and sign information. TBGASL signatories are fixed; the supplier signatory is filled in.</p>
+        <p>One form for both documents: parties, factory, dates and sign information. TBGASL signatories are fixed. There is no supplier signatory field: the supplier fills in their name and title when they sign offline.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4990-23021" target="_blank" rel="noopener">Open in Figma <span class="id">4990:23021</span></a>
       </div>
     </div>
@@ -484,7 +484,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=5415-45423" target="_blank" rel="noopener"><img src="shots/s19_qt_preview.png" alt="QT preview of result, agreement and addendum" loading="lazy"></a>
       <div class="body">
         <h3>Preview, then send</h3>
-        <p>Result and remark, the Addendum product list, the Agreement &amp; Addendum details, and the generated PDF to preview or download. Send to the ethical team, or straight to the SVSI team.</p>
+        <p>Result and remark, the Addendum product list, the Agreement &amp; Addendum details, and the two generated PDFs (Agreement, Addendum) to preview or download. Send to the ethical team, or straight to the SVSI team.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=5415-45423" target="_blank" rel="noopener">Open in Figma <span class="id">5415:45423</span></a>
       </div>
     </div>
@@ -502,6 +502,9 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
     <ul>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1405-9212" target="_blank" rel="noopener"><span class="nm">Review lab result</span><span class="id">1405:9212</span></a></li>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4990-23021" target="_blank" rel="noopener"><span class="nm">Generate Agreement &amp; Addendum</span><span class="id">4990:23021</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=5022-33099" target="_blank" rel="noopener"><span class="nm">Returned by SVSI, scroll table</span><span class="id">5022:33099</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=7361-31251" target="_blank" rel="noopener"><span class="nm">Wide screen (1920), full table</span><span class="id">7361:31251</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=7356-29010" target="_blank" rel="noopener"><span class="nm">Dev note, item tables scroll</span><span class="id">7356:29010</span></a></li>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1448-9588" target="_blank" rel="noopener"><span class="nm">Request revised report</span><span class="id">1448:9588</span></a></li>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1448-9626" target="_blank" rel="noopener"><span class="nm">Reject task</span><span class="id">1448:9626</span></a></li>
     </ul>
@@ -565,7 +568,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <div class="actors"><span class="chip team"><span class="dot"></span>SVSI Team</span></div>
     </div>
   </div>
-  <p class="intro">The SVSI team approves <strong>once</strong>. They see everything QT prepared and can return the task to QT or to the ethical team, or reject it. When they confirm, a preview shows QT's remark, documents, item list, Agreement and Addendum. If something is off, they leave a <strong>comment on the item</strong> (visible to QT only) instead of sending it back; for long lists the comments can be exported to Excel and imported back. Confirming sends the documents to the supplier.</p>
+  <p class="intro">The SVSI team approves <strong>once</strong>. They see everything QT prepared and can return the task to QT or to the ethical team, or reject it. When they confirm, a preview shows QT's remark, documents, item list, Agreement and Addendum. If something is off, they leave a <strong>comment on the item</strong> (visible to QT only) instead of sending it back; for long lists the comments can be exported to Excel and imported back. Before confirming they <strong>tick which documents go to the supplier</strong>: a renewal usually needs the Addendum only, because the Agreement stays valid. With nothing ticked, Confirm is disabled.</p>
   <div class="plays"><span class="pl">Play the prototype</span><a class="play team" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1603-18989&starting-point-node-id=1603%3A18989&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">SVSI 1</span>SVSI team review → return / reject / confirm</a><a class="play buyer" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=5022-33099&starting-point-node-id=5022%3A33099&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">QT 10</span>Returned by SVSI → fix → resend</a></div>
   <div class="frames">
     <div class="frame">
@@ -580,7 +583,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <a class="shot" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4976-23490" target="_blank" rel="noopener"><img src="shots/s21_svsi_preview.png" alt="SVSI preview with item comments" loading="lazy"></a>
       <div class="body">
         <h3>Preview &amp; comment</h3>
-        <p>Same preview as QT, read-only, with an SVSI comment per item and a place for the SVSI team's own remark and documents.</p>
+        <p>Same preview as QT, read-only, with an SVSI comment per item, a checkbox per document to choose what is sent to the supplier, and a place for the SVSI team's own remark and documents.</p>
         <a class="go" href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=4976-23490" target="_blank" rel="noopener">Open in Figma <span class="id">4976:23490</span></a>
       </div>
     </div>
@@ -599,6 +602,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=5425-22371" target="_blank" rel="noopener"><span class="nm">Return to QT</span><span class="id">5425:22371</span></a></li>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=5415-45329" target="_blank" rel="noopener"><span class="nm">Return to ethical team</span><span class="id">5415:45329</span></a></li>
       <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=1649-20424" target="_blank" rel="noopener"><span class="nm">Reject task</span><span class="id">1649:20424</span></a></li>
+      <li><a href="https://www.figma.com/design/aJIs39okLTRsQMwk96NWrC/SVSI?node-id=7383-30351" target="_blank" rel="noopener"><span class="nm">Nothing ticked, Confirm disabled</span><span class="id">7383:30351</span></a></li>
     </ul>
   </div>
   <div class="morelinks">
@@ -622,7 +626,7 @@ footer{margin-top:44px; padding-top:22px; border-top:1px solid var(--line); colo
       <div class="actors"><span class="chip supplier"><span class="dot"></span>Supplier</span></div>
     </div>
   </div>
-  <p class="intro">The supplier downloads the Agreement and Addendum, signs them offline and uploads the signed copies back into ICW. Choosing a new file replaces the previous one. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.</p>
+  <p class="intro">The supplier downloads the documents the SVSI team sent (Agreement and / or Addendum, as two PDFs), signs them offline and uploads the signed copies back into ICW. Choosing a new file replaces the previous one. The task waits at <strong>Pending Sign Off</strong> until the signed copies arrive.</p>
   <div class="plays"><span class="pl">Play the prototype</span><a class="play supplier" href="https://www.figma.com/proto/aJIs39okLTRsQMwk96NWrC/SVSI?page-id=0%3A1&node-id=1656-22338&starting-point-node-id=1656%3A22338&scaling=scale-down-width&content-scaling=fixed" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span><span class="pk">Supplier 6</span>Upload signed Agreement &amp; Addendum</a></div>
   <div class="frames">
     <div class="frame">
