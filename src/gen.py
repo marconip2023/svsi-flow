@@ -73,7 +73,7 @@ S=[]
 S.append(step('s0','00','Before the task exists',[('buyer','QT')],
  'SVSI applies to a <strong>factory</strong>, not a supplier. So the buyer starts from the supplier list, expands a supplier to see the factories underneath it, and decides which of those factories are in scope. Adding a factory to SVSI puts it at <strong>Not Rated</strong>; the scheme is set after the audit. Factories that will never join are marked <strong>Out of Scope</strong>.',
  ['Q1','Q3','Q4','Q5','Q2'],
- [('s01_supplier_list.png','530:3455','Supplier list, expanded','Each supplier row opens to the factories under it. Every factory carries its own SVSI scheme chip, and the scheme tabs filter the list by tier.','Supplier list expanded to show the factories under each supplier'),
+ [('s01_supplier_list.png','530:3455','Supplier list, expanded','Each supplier row opens to the factories under it. Every factory carries its own SVSI scheme chip, and the SVSI Scheme column filter narrows the list by tier (there are no tier tabs).','Supplier list expanded to show the factories under each supplier'),
   ('s02_mark_svsi.png','952:3937','Add to or remove from SVSI','Bulk-select factories, then use Actions. Adding confirms first and lands every factory at <code>NOT RATED</code>; removing moves it to <code>OUT OF SCOPE</code>.','Selecting out-of-scope factories before adding them to SVSI')],
  [('Also in this area',[('Supplier list, collapsed (default view)','6:2'),('Add To SVSI, confirm','3744:15578'),('Add To SVSI, done','2075:12383'),('Remove From SVSI, confirm','2078:5392'),('Factory detail, overview','832:18557'),('Supplier detail, overview','2100:5389')])]))
 S.append(step('s1','01','Application',[('supplier','Supplier applies'),('buyer','QT checks')],
